@@ -5,10 +5,13 @@ keystone.init({
   'name': 'stone',
   'user model': 'User',
   'auto update': true,
-  'auth': true
+  'auth': true,
+  views: 'templates/views',
+  'view engine': 'pug'
 });
 
 keystone.import('models');
+keystone.set('routes', require('./routes'));
 
 console.log('keystone', keystone);
 
