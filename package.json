@@ -1,7 +1,7 @@
 {
-  "name": "stone",
-  "version": "1.0.0",
-  "description": "a server application for grounded applications with using KeystoneJS",
+  "name": "airstone",
+  "version": "0.0.1",
+  "description": "a lightweight website builder grounded applications using KeystoneJS as a backend",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
