@@ -1,11 +1,11 @@
 const keystone = require('keystone');
 const Types = keystone.Field.Types;
-const theme = keystone.get('theme');
 const Page = new keystone.List('Page');
+import theme from '../theme/index';
 
 Page.add({
   title: { type: String, required: true, initial: true },
-  path: { type: Types.Url, required: true, initial: true },
+  path: { type: String, required:true, initial: true },
   // custom page type
   type: {
     type: Types.Select,

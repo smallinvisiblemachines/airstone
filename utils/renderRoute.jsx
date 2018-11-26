@@ -29,11 +29,13 @@ const renderRoute = function(routes, url, state, res) {
     const content = renderToString(
       <Provider store={store}>
         <StaticRouter location={url} context={context}>
-          {renderRoutes(Routes)}
+          {renderRoutes(routes)}
         </StaticRouter>
       </Provider>
     );
 
     return content;
   })
-}
+};
+
+export default renderRoute;

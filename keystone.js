@@ -9,11 +9,9 @@ keystone.init({
   'auth': true
 });
 
-keystone.set('theme', calcite);
-
 keystone.import('models');
 keystone.set('routes', require('./routes'));
 
-console.log('keystone', keystone);
+// console.log('keystone', keystone);
 
 keystone.start();

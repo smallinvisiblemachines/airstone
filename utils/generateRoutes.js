@@ -37,7 +37,7 @@ arbitrary page types (React Components)
 const generateRoutes = function(types, pages) {
   // our app is like a nested object,
   // always starting with a topmost component.
-  const routes = {
+  const tree = {
     component: App,
     routes: []
   };
@@ -45,8 +45,19 @@ const generateRoutes = function(types, pages) {
   console.log('generateRoutes', types, pages);
 
   for (let p = 0; pages.length > p; ++p) {
+    // compare our page types with our supplied types from the theme
+    if ( types.hasOwnProperty( pages[p].type ) ) {
 
+      tree.routes.push({
+        path: pages[p].path,
+        exact: true,
+        component: types[ pages[p].type ]
+      });
+
+    }
   }
+
+  return [tree];
 };
 
 export default generateRoutes;
