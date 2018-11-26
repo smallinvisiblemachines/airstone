@@ -10,6 +10,10 @@ keystone.init({
   'view engine': 'pug'
 });
 
+keystone.set('theme', {
+  test: 'my arbitrary object'
+});
+
 keystone.import('models');
 keystone.set('routes', require('./routes'));
 

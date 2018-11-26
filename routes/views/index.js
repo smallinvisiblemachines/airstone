@@ -3,9 +3,13 @@ const importRoutes = keystone.importer(__dirname);
 
 
 module.exports = async function(req, res) {
-
+  /*
+    change the route logic so that we dynamically pre-render a react component
+    based on the route path we are given.
+    can use blogBust/universalBust for examples of logic.
+  */
   console.log(req.route.path);
-  
+
 
   const Page = keystone.list('Page');
 
