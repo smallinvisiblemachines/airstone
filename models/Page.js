@@ -1,8 +1,8 @@
 const keystone = require('keystone');
 const Types = keystone.Field.Types;
-
+const theme = keystone.get('theme');
 const Page = new keystone.List('Page');
-console.log(keystone);
+
 Page.add({
   title: { type: String, required: true, initial: true },
   path: { type: Types.Url, required: true, initial: true },
@@ -10,10 +10,7 @@ Page.add({
   type: {
     type: Types.Select,
     initial: true,
-    options: [
-      'Index',
-      'Add Event',
-    ]
+    options: Object.keys(theme.pageTypes)
   },
   description: { type: Types.Html, wysiwyg: true },
   published: { type: Boolean },

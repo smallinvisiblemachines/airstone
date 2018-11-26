@@ -1,22 +1,19 @@
 const keystone = require('keystone');
+const calcite = require('./theme/index');
 
 keystone.init({
   'cookie secret': 'bl#rg!',
   'name': 'stone',
   'user model': 'User',
   'auto update': true,
-  'auth': true,
-  views: 'templates/views',
-  'view engine': 'pug'
+  'auth': true
 });
 
-keystone.set('theme', {
-  test: 'my arbitrary object'
-});
+keystone.set('theme', calcite);
 
 keystone.import('models');
 keystone.set('routes', require('./routes'));
 
-// console.log('keystone', keystone);
+console.log('keystone', keystone);
 
 keystone.start();

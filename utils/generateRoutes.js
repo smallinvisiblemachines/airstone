@@ -1,4 +1,4 @@
-import App from '../components/App.jsx';
+import App from '../theme/components/App.jsx';
 
 /*
 generate a structure like the object below. 
@@ -42,8 +42,10 @@ const generateRoutes = function(types, pages) {
     routes: []
   };
 
+  console.log('generateRoutes', types, pages);
+
   for (let p = 0; pages.length > p; ++p) {
-    
+
   }
 };
 

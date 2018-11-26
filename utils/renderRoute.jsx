@@ -7,6 +7,8 @@ import { matchRoutes, renderRoutes } from 'react-router-config';
 import generateStore from './generateStore.js';
 import renderHead from './renderHead.js';
 
+import rootReducer from '../theme/dux/root';
+
 const renderRoute = function(routes, url, state, res) {
   /*
     we assume our routes are generated dynamically.
@@ -15,7 +17,7 @@ const renderRoute = function(routes, url, state, res) {
     this store state gets injected into the pre-rendered html.
   */
 
-  const store = generateStore(state);
+  const store = generateStore(rootReducer, state);
   const branch = matchRoutes(routes, url);
   const promises = branch.map(function({ route }) {
     const fetchData = route.component.fetchData;
