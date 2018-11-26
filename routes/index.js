@@ -3,6 +3,7 @@ const importRoutes = keystone.importer(__dirname);
 import renderRoute from '../utils/renderRoute.jsx';
 import generateRoutes from '../utils/generateRoutes';
 import theme from '../theme/index';
+import renderHead from '../utils/renderHead';
 
 // const routes = {
 //   views: importRoutes('./views'),
@@ -17,14 +18,10 @@ async function handleRoutes(req, res) {
   const pages = await Page.model.find({});
   const routes = generateRoutes(theme.pageTypes, pages);
 
-
-  // console.log(req.params, pages);
-  console.log(routes);
-  // console.log(req.route);
-
   const string = await renderRoute(routes, req.route.path, {}, res);
-
-  res.send(string);
+  const html = renderHead(string, pages);
+  
+  res.send(html);
 }
 
 exports = module.exports = function(app) {
