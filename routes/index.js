@@ -11,5 +11,5 @@ exports = module.exports = function(app) {
   app.get('/add-event', routes.views.addEvent);
   app.post('/api/event', routes.api.event.post)
 
-  console.log({event: routes.api.event});
+  console.log({routes});
 };

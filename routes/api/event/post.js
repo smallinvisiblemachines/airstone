@@ -6,7 +6,6 @@ module.exports = function(req, res) {
     return res.sendError('incomplete data set');
   }
 
-  console.log(Event);
   const newEvent = new Event.model(req.body);
 
   Event.updateItem(newEvent, req.body, function(error) {
