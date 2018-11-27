@@ -29537,7 +29537,11 @@ var App = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { id: 'app' },
-        'This is the app'
+        _react2.default.createElement(
+          'span',
+          null,
+          'This is the app'
+        )
       );
     }
   }]);

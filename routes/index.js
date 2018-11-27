@@ -3,7 +3,10 @@ const importRoutes = keystone.importer(__dirname);
 import renderRoute from '../utils/renderRoute.jsx';
 import generateRoutes from '../utils/generateRoutes';
 import theme from '../theme/index';
-import renderHead from '../utils/renderHead';
+
+import renderDocument from '../utils/renderDocument';
+
+import manifest from '../manifest.json';
 
 // const routes = {
 //   views: importRoutes('./views'),
@@ -16,11 +19,16 @@ async function handleRoutes(req, res) {
   const routes = generateRoutes(theme.pageTypes, pages);
 
   const string = await renderRoute(routes, req.route.path, {}, res);
-  const html = renderHead(string, {
+  
+  const head = {
+    ...manifest
+  };
+
+  const doc = renderDocument(head, string, {
     pages
   });
 
-  res.send(html);
+  res.send(doc);
 }
 
 exports = module.exports = function(app) {

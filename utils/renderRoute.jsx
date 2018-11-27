@@ -5,8 +5,6 @@ import StaticRouter from 'react-router-dom/StaticRouter';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 
 import generateStore from './generateStore.js';
-import renderHead from './renderHead.js';
-
 import rootReducer from '../theme/dux/root';
 
 const renderRoute = function(routes, url, state, res) {

@@ -11,7 +11,7 @@ class App extends React.Component {
     console.log(this.props.route)
     return (
       <div id="app">
-        This is the app
+        <span>This is the app</span>
       </div>
     );
   }
