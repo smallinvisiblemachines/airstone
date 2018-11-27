@@ -150,7 +150,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // THEME
 var state = window.__PRELOADED_STATE__; // IMPORTS
 
-console.log('preloaded state', state);
+console.log('PRELOADED STATE:', state);
 
 var store = (0, _generateStore2.default)(_root2.default, state, (0, _redux.applyMiddleware)((0, _reduxPromiseMiddleware2.default)(), _reduxThunk2.default, (0, _reduxLogger.createLogger)()));
 
@@ -29516,8 +29516,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// {renderRoutes(this.props.route.routes)}
-
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
 
@@ -29687,7 +29685,6 @@ __webpack_require__.r(__webpack_exports__);
 // the root reducer will be fed to any generated store
 
 const rootReducer = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
-  counter: _counter_js__WEBPACK_IMPORTED_MODULE_1__["default"]
 });
 
 /* harmony default export */ __webpack_exports__["default"] = (rootReducer);
@@ -29772,8 +29769,6 @@ const generateRoutes = function(types, pages) {
     component: _theme_components_App_jsx__WEBPACK_IMPORTED_MODULE_0___default.a,
     routes: []
   };
-
-  console.log('generateRoutes', types, pages);
 
   for (let p = 0; pages.length > p; ++p) {
     // compare our page types with our supplied types from the theme

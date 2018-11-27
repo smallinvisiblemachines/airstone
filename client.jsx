@@ -22,7 +22,7 @@ import generateRoutes from './utils/generateRoutes';
 */
 
 const state = window.__PRELOADED_STATE__;
-console.log('preloaded state', state);
+console.log('PRELOADED STATE:', state);
 
 const store = generateStore(
   rootReducer,

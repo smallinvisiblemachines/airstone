@@ -1,7 +1,6 @@
 import React from 'react';
 import { renderRoutes } from 'react-router-config';
 
-        // {renderRoutes(this.props.route.routes)}
 
 class App extends React.Component {
   componentDidMount() {

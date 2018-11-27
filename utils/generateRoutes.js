@@ -42,8 +42,6 @@ const generateRoutes = function(types, pages) {
     routes: []
   };
 
-  console.log('generateRoutes', types, pages);
-
   for (let p = 0; pages.length > p; ++p) {
     // compare our page types with our supplied types from the theme
     if ( types.hasOwnProperty( pages[p].type ) ) {
