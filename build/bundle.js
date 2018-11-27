@@ -29528,21 +29528,12 @@ var App = function (_React$Component) {
   _createClass(App, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      console.log('App mounted');
+      console.log('App mounted:', this);
     }
   }, {
     key: 'render',
     value: function render() {
-      console.log(this.props.route);
-      return _react2.default.createElement(
-        'div',
-        { id: 'app' },
-        _react2.default.createElement(
-          'span',
-          null,
-          'This is the app'
-        )
-      );
+      return (0, _reactRouterConfig.renderRoutes)(this.props.route.routes);
     }
   }]);
 
@@ -29550,6 +29541,71 @@ var App = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = App;
+
+/***/ }),
+
+/***/ "./theme/components/Navigation.jsx":
+/*!*****************************************!*\
+  !*** ./theme/components/Navigation.jsx ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function mapStateToProps(state) {
+  console.log(state);
+
+  return {};
+}
+
+var Navigation = function (_Component) {
+  _inherits(Navigation, _Component);
+
+  function Navigation(props) {
+    _classCallCheck(this, Navigation);
+
+    return _possibleConstructorReturn(this, (Navigation.__proto__ || Object.getPrototypeOf(Navigation)).call(this, props));
+  }
+
+  _createClass(Navigation, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        'this is Navigation'
+      );
+    }
+  }]);
+
+  return Navigation;
+}(_react.Component);
+
+;
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(Navigation);
 
 /***/ }),
 
@@ -29573,6 +29629,10 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _Navigation = __webpack_require__(/*! ../Navigation.jsx */ "./theme/components/Navigation.jsx");
+
+var _Navigation2 = _interopRequireDefault(_Navigation);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29591,12 +29651,13 @@ var Index = function (_React$Component) {
   }
 
   _createClass(Index, [{
-    key: "render",
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "div",
-        { id: "index" },
-        "This is index"
+        'div',
+        { id: 'index' },
+        _react2.default.createElement(_Navigation2.default, null),
+        'This is index'
       );
     }
   }]);

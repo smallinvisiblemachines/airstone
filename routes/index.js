@@ -19,12 +19,8 @@ async function handleRoutes(req, res) {
   const routes = generateRoutes(theme.pageTypes, pages);
 
   const string = await renderRoute(routes, req.route.path, {}, res);
-  
-  const head = {
-    ...manifest
-  };
 
-  const doc = renderDocument(head, string, {
+  const doc = renderDocument(manifest, string, {
     pages
   });
 
