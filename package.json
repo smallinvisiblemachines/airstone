@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel-node keystone.js"
+    "start": "babel-node keystone.js",
+    "watch": "webpack --progress --watch"
   },
   "author": "knaut",
   "license": "ISC",
@@ -29,6 +30,10 @@
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^4.3.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "webpack": "^4.23.1"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.1.2"
   }
 }

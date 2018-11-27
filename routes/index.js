@@ -10,22 +10,26 @@ import renderHead from '../utils/renderHead';
 //   api: importRoutes('./api')
 // };
 
-console.log(theme)
-
 async function handleRoutes(req, res) {
-
   const Page = keystone.list('Page');
   const pages = await Page.model.find({});
   const routes = generateRoutes(theme.pageTypes, pages);
 
   const string = await renderRoute(routes, req.route.path, {}, res);
-  const html = renderHead(string, pages);
-  
+  const html = renderHead(string, {
+    pages
+  });
+
   res.send(html);
 }
 
 exports = module.exports = function(app) {
-
+  app.get('/assets/bundle.js', function(req, res) {
+    res.sendFile('bundle.js', {
+      root: `${__dirname}/../build/`
+    });
+  });
   app.get('/', handleRoutes);
   app.get('/*', handleRoutes);
+  
 };

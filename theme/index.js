@@ -1,8 +1,10 @@
 import Index from './components/pages/Index.jsx';
 
-module.exports = {
+const calcite = {
   name: 'Calcite',
   pageTypes: {
     Index
   }
 };
+
+export default calcite;

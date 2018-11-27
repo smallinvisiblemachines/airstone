@@ -57,7 +57,7 @@ const generateRoutes = function(types, pages) {
     }
   }
 
-  return [tree];
+  return [ tree ];
 };
 
 export default generateRoutes;
