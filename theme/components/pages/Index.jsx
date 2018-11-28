@@ -1,6 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+// COMPONENTS
+import {
+  Container,
+  Col,
+  Row
+} from 'reactstrap';
+
 function mapStateToProps(state) {
   console.log(state);
 
@@ -12,9 +19,17 @@ function mapStateToProps(state) {
 class Index extends React.Component {
   render() {
     return(
-      <div id="index">
-        <h1>This is index</h1>
-      </div>
+      <Container>
+        <Row>
+          <Col sm={12}>
+
+            <div id="index">
+              <h1>This is index</h1>
+            </div>
+
+          </Col>
+        </Row>
+      </Container>
     )
   }
 }

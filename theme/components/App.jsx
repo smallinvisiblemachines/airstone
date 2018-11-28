@@ -2,7 +2,7 @@ import React from 'react';
 import { renderRoutes } from 'react-router-config';
 
 // COMPONENTS
-import Navigation from './Navigation.jsx';
+import GlobalHeader from './GlobalHeader.jsx';
 
 /*
   the app is a global container; the first component in the chain our app renders.
@@ -19,7 +19,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Navigation/>
+        <GlobalHeader/>
         { renderRoutes( this.props.route.routes ) }
       </React.Fragment>
     );
