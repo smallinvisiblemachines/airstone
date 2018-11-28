@@ -1,16 +1,22 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import Navigation from '../Navigation.jsx';
+function mapStateToProps(state) {
+  console.log(state);
+
+  return {
+    ...state.pages
+  };
+}
 
 class Index extends React.Component {
   render() {
     return(
       <div id="index">
-        <Navigation/>
-        This is index
+        <h1>This is index</h1>
       </div>
     )
   }
 }
 
-export default Index;
+export default connect(mapStateToProps)(Index); 

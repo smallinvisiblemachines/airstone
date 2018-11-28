@@ -1,22 +1,29 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-function mapStateToProps(state) {
-  console.log(state);
+// THEME
+import theme from '../index';
 
+// COMPONENTS
+
+function mapStateToProps(state) {
   return {
-    
+    pages: state.pages
   };
 }
 
 class Navigation extends Component {
   constructor(props) {
     super(props);
+
+    console.log(this);
   }
 
   render() {
     return (
-      <div>this is Navigation</div>
+      <header>
+        this is Navigation
+      </header>
     );
   }
 };

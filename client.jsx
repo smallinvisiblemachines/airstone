@@ -11,11 +11,12 @@ import promise from 'redux-promise-middleware';
 
 // THEME
 import theme from './theme/index';
-import rootReducer from './theme/dux/root';
+import rootReducer from './theme/reducers/root';
 
 // UTILS
 import generateStore from './utils/generateStore.js';
 import generateRoutes from './utils/generateRoutes';
+
 
 /*
   our preloaded state is manifested in a JSON object already set as a global variable

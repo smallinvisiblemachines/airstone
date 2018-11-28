@@ -126,7 +126,7 @@ var _index = __webpack_require__(/*! ./theme/index */ "./theme/index.js");
 
 var _index2 = _interopRequireDefault(_index);
 
-var _root = __webpack_require__(/*! ./theme/dux/root */ "./theme/dux/root.js");
+var _root = __webpack_require__(/*! ./theme/reducers/root */ "./theme/reducers/root.js");
 
 var _root2 = _interopRequireDefault(_root);
 
@@ -22705,7 +22705,6 @@ function warning(message) {
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
 var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
-var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var REACT_STATICS = {
     childContextTypes: true,
     contextType: true,
@@ -22713,6 +22712,7 @@ var REACT_STATICS = {
     defaultProps: true,
     displayName: true,
     getDefaultProps: true,
+    getDerivedStateFromError: true,
     getDerivedStateFromProps: true,
     mixins: true,
     propTypes: true,
@@ -29508,6 +29508,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterConfig = __webpack_require__(/*! react-router-config */ "./node_modules/react-router-config/es/index.js");
 
+var _Navigation = __webpack_require__(/*! ./Navigation.jsx */ "./theme/components/Navigation.jsx");
+
+var _Navigation2 = _interopRequireDefault(_Navigation);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29515,6 +29519,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// COMPONENTS
+
+
+/*
+  the app is a global container; the first component in the chain our app renders.
+*/
+
+// THEME
+
 
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
@@ -29533,7 +29547,12 @@ var App = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      return (0, _reactRouterConfig.renderRoutes)(this.props.route.routes);
+      return _react2.default.createElement(
+        _react2.default.Fragment,
+        null,
+        _react2.default.createElement(_Navigation2.default, null),
+        (0, _reactRouterConfig.renderRoutes)(this.props.route.routes)
+      );
     }
   }]);
 
@@ -29566,6 +29585,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
+var _index = __webpack_require__(/*! ../index */ "./theme/index.js");
+
+var _index2 = _interopRequireDefault(_index);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29574,10 +29597,15 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-function mapStateToProps(state) {
-  console.log(state);
+// THEME
 
-  return {};
+
+// COMPONENTS
+
+function mapStateToProps(state) {
+  return {
+    pages: state.pages
+  };
 }
 
 var Navigation = function (_Component) {
@@ -29586,14 +29614,17 @@ var Navigation = function (_Component) {
   function Navigation(props) {
     _classCallCheck(this, Navigation);
 
-    return _possibleConstructorReturn(this, (Navigation.__proto__ || Object.getPrototypeOf(Navigation)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Navigation.__proto__ || Object.getPrototypeOf(Navigation)).call(this, props));
+
+    console.log(_this);
+    return _this;
   }
 
   _createClass(Navigation, [{
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        'div',
+        'header',
         null,
         'this is Navigation'
       );
@@ -29625,13 +29656,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Navigation = __webpack_require__(/*! ../Navigation.jsx */ "./theme/components/Navigation.jsx");
-
-var _Navigation2 = _interopRequireDefault(_Navigation);
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29640,6 +29671,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function mapStateToProps(state) {
+  console.log(state);
+
+  return _extends({}, state.pages);
+}
 
 var Index = function (_React$Component) {
   _inherits(Index, _React$Component);
@@ -29656,8 +29693,11 @@ var Index = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { id: 'index' },
-        _react2.default.createElement(_Navigation2.default, null),
-        'This is index'
+        _react2.default.createElement(
+          'h1',
+          null,
+          'This is index'
+        )
       );
     }
   }]);
@@ -29665,94 +29705,7 @@ var Index = function (_React$Component) {
   return Index;
 }(_react2.default.Component);
 
-exports.default = Index;
-
-/***/ }),
-
-/***/ "./theme/dux/counter.js":
-/*!******************************!*\
-  !*** ./theme/dux/counter.js ***!
-  \******************************/
-/*! exports provided: INCREMENT, increment, DECREMENT, decrement, GET_COUNT, default, getCount */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "INCREMENT", function() { return INCREMENT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECREMENT", function() { return DECREMENT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "decrement", function() { return decrement; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GET_COUNT", function() { return GET_COUNT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return count; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCount", function() { return getCount; });
-const INCREMENT = 'INCREMENT';
-function increment() {
-  return {
-    type: INCREMENT,
-    payload: true
-  }
-}
-
-const DECREMENT = 'DECREMENT';
-function decrement() {
-  return {
-    type: DECREMENT,
-    payload: true
-  }
-}
-
-const GET_COUNT = 'GET_COUNT';
-
-function count( state = null, action ) {
-  switch(action.type) {
-    default:
-
-      return state;
-
-    case INCREMENT:
-
-      return state + 1;
-
-    case DECREMENT:
-
-      return state - 1;
-  }
-}
-
-function getCount() {
-  return (dispatch, getState) => {
-    dispatch({
-      type: GET_COUNT,
-      payload: getState()
-    })
-  }
-}
-
-/***/ }),
-
-/***/ "./theme/dux/root.js":
-/*!***************************!*\
-  !*** ./theme/dux/root.js ***!
-  \***************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/index.js");
-/* harmony import */ var _counter_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./counter.js */ "./theme/dux/counter.js");
-
-
-// DUX
-
-
-// import all other reducers here
-// the root reducer will be fed to any generated store
-
-const rootReducer = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
-});
-
-/* harmony default export */ __webpack_exports__["default"] = (rootReducer);
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(Index);
 
 /***/ }),
 
@@ -29777,6 +29730,60 @@ const calcite = {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (calcite);
+
+/***/ }),
+
+/***/ "./theme/reducers/pages.js":
+/*!*********************************!*\
+  !*** ./theme/reducers/pages.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return pages; });
+// MAIN REDUCER
+function pages(
+  state = [],
+  action
+) {
+  let newState = {
+    ...state
+  };
+
+  switch (action.type) {
+    default:
+      return newState;
+  }
+}
+
+/***/ }),
+
+/***/ "./theme/reducers/root.js":
+/*!********************************!*\
+  !*** ./theme/reducers/root.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/index.js");
+/* harmony import */ var _pages_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pages.js */ "./theme/reducers/pages.js");
+
+
+// DUX
+
+
+// import all other reducers here
+// the root reducer will be fed to any generated store
+
+const rootReducer = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
+  pages: _pages_js__WEBPACK_IMPORTED_MODULE_1__["default"]
+});
+
+/* harmony default export */ __webpack_exports__["default"] = (rootReducer);
 
 /***/ }),
 

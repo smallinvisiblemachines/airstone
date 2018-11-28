@@ -33,6 +33,11 @@ exports = module.exports = function(app) {
       root: `${__dirname}/../build/`
     });
   });
+  app.get('/global.css', function(req, res) {
+    res.sendFile('global.css', {
+      root: `${__dirname}/../build/`
+    });
+  });
   app.get('/', handleRoutes);
   app.get('/*', handleRoutes);
   
