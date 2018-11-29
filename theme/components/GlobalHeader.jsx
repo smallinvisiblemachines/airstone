@@ -40,6 +40,18 @@ class GlobalHeader extends Component {
     console.log(this);
   }
 
+  /*
+  static fetchData(store) {
+    const manifest = store.dispatch( manifest.getManifest );
+    const pages = store.dispatch( manifest.getManifest );
+
+    return {
+      manifest,
+      pages
+    }
+  }
+  */
+
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen

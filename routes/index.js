@@ -13,14 +13,20 @@ import manifest from '../manifest.json';
 //   api: importRoutes('./api')
 // };
 
+
 async function handleRoutes(req, res) {
   const Page = keystone.list('Page');
   const pages = await Page.model.find({});
   const routes = generateRoutes(theme.pageTypes, pages);
+  console.log(req.url)
+  const path = req.url;
 
   const state = {
     manifest,
-    pages
+    pages,
+    current: {
+      path
+    }
   };
 
   const body = await renderRoute(routes, req.route.path, state, res);

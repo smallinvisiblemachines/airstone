@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 // COMPONENTS
 import {
@@ -12,15 +13,23 @@ import GlobalHeader from '../GlobalHeader.jsx';
 
 
 function mapStateToProps(state) {
+  let page = null;
+  for (let p in state.pages) {
+    if (state.pages[p].path === state.current.path) {
+      page = state.pages[p];
+    }
+  }
+
   return {
-    ...state
+    pages: state.pages,
+    manifest: state.manifest,
+    page
   };
 }
 
 class Index extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this);
   }
   render() {
     return(
@@ -35,7 +44,8 @@ class Index extends React.Component {
           <Col sm={12}>
 
             <div id="index">
-              <h1>This is an index</h1>
+              <h1>{this.props.page.title}</h1>
+              { ReactHtmlParser(this.props.page.description) }
             </div>
 
           </Col>
