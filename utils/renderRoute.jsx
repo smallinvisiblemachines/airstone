@@ -4,8 +4,6 @@ import { Provider } from 'react-redux';
 import StaticRouter from 'react-router-dom/StaticRouter';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 
-import Helmet, { HelmetProvider } from 'react-helmet-async';
-
 import generateStore from './generateStore.js';
 import rootReducer from '../theme/reducers/root';
 

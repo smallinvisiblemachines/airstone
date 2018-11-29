@@ -18,13 +18,13 @@ async function handleRoutes(req, res) {
   const pages = await Page.model.find({});
   const routes = generateRoutes(theme.pageTypes, pages);
 
-  const state = {};
+  const state = {
+    manifest,
+    pages
+  };
 
   const body = await renderRoute(routes, req.route.path, state, res);
-
-  const doc = renderDocument(manifest, body, {
-    pages
-  });
+  const doc = renderDocument(manifest, body, state);
 
   res.send(doc);
 }

@@ -40931,13 +40931,13 @@ function mapStateToProps(state) {
   return _extends({}, state);
 }
 
-var Navigation = function (_Component) {
-  _inherits(Navigation, _Component);
+var GlobalHeader = function (_Component) {
+  _inherits(GlobalHeader, _Component);
 
-  function Navigation(props) {
-    _classCallCheck(this, Navigation);
+  function GlobalHeader(props) {
+    _classCallCheck(this, GlobalHeader);
 
-    var _this = _possibleConstructorReturn(this, (Navigation.__proto__ || Object.getPrototypeOf(Navigation)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (GlobalHeader.__proto__ || Object.getPrototypeOf(GlobalHeader)).call(this, props));
 
     _this.toggle = _this.toggle.bind(_this);
     _this.state = {
@@ -40945,15 +40945,33 @@ var Navigation = function (_Component) {
     };
 
     console.log(_this);
+
     return _this;
   }
 
-  _createClass(Navigation, [{
+  _createClass(GlobalHeader, [{
     key: 'toggle',
     value: function toggle() {
       this.setState({
         isOpen: !this.state.isOpen
       });
+    }
+  }, {
+    key: 'renderNavItems',
+    value: function renderNavItems(pages) {
+      var items = [];
+      for (var p = 0; pages.length > p; ++p) {
+        items.push(_react2.default.createElement(
+          _reactstrap.NavItem,
+          null,
+          _react2.default.createElement(
+            _reactstrap.NavLink,
+            { href: pages[p].path },
+            pages[p].title
+          )
+        ));
+      }
+      return items;
     }
   }, {
     key: 'render',
@@ -40967,7 +40985,7 @@ var Navigation = function (_Component) {
           _react2.default.createElement(
             _reactstrap.NavbarBrand,
             { href: '/' },
-            'reactstrap'
+            this.props.manifest.title
           ),
           _react2.default.createElement(_reactstrap.NavbarToggler, { onClick: this.toggle }),
           _react2.default.createElement(
@@ -40976,24 +40994,7 @@ var Navigation = function (_Component) {
             _react2.default.createElement(
               _reactstrap.Nav,
               { className: 'ml-auto', navbar: true },
-              _react2.default.createElement(
-                _reactstrap.NavItem,
-                null,
-                _react2.default.createElement(
-                  _reactstrap.NavLink,
-                  { href: '/components/' },
-                  'Components'
-                )
-              ),
-              _react2.default.createElement(
-                _reactstrap.NavItem,
-                null,
-                _react2.default.createElement(
-                  _reactstrap.NavLink,
-                  { href: 'https://github.com/reactstrap/reactstrap' },
-                  'GitHub'
-                )
-              )
+              this.renderNavItems(this.props.pages)
             )
           )
         )
@@ -41001,12 +41002,12 @@ var Navigation = function (_Component) {
     }
   }]);
 
-  return Navigation;
+  return GlobalHeader;
 }(_react.Component);
 
 ;
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(Navigation);
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(GlobalHeader);
 
 /***/ }),
 
@@ -41132,6 +41133,33 @@ const calcite = {
 
 /***/ }),
 
+/***/ "./theme/reducers/manifest.js":
+/*!************************************!*\
+  !*** ./theme/reducers/manifest.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return manifest; });
+// MAIN REDUCER
+function manifest(
+  state = [],
+  action
+) {
+  let newState = {
+    ...state
+  };
+
+  switch (action.type) {
+    default:
+      return newState;
+  }
+}
+
+/***/ }),
+
 /***/ "./theme/reducers/pages.js":
 /*!*********************************!*\
   !*** ./theme/reducers/pages.js ***!
@@ -41169,17 +41197,19 @@ function pages(
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/index.js");
-/* harmony import */ var _pages_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pages.js */ "./theme/reducers/pages.js");
+/* harmony import */ var _manifest_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./manifest.js */ "./theme/reducers/manifest.js");
+/* harmony import */ var _pages_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages.js */ "./theme/reducers/pages.js");
 
 
-// DUX
+// REDUCERS
+
 
 
 // import all other reducers here
 // the root reducer will be fed to any generated store
-
 const rootReducer = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
-  pages: _pages_js__WEBPACK_IMPORTED_MODULE_1__["default"]
+  manifest: _manifest_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  pages: _pages_js__WEBPACK_IMPORTED_MODULE_2__["default"]
 });
 
 /* harmony default export */ __webpack_exports__["default"] = (rootReducer);

@@ -29,7 +29,7 @@ function mapStateToProps(state) {
   };
 }
 
-class Navigation extends Component {
+class GlobalHeader extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
@@ -38,6 +38,7 @@ class Navigation extends Component {
     };
 
     console.log(this);
+
   }
 
   toggle() {
@@ -46,20 +47,27 @@ class Navigation extends Component {
     });
   }
 
+  renderNavItems(pages) {
+    let items = [];
+    for (let p = 0; pages.length > p; ++p) {
+      items.push(
+        <NavItem>
+          <NavLink href={pages[p].path}>{pages[p].title}</NavLink>
+        </NavItem>
+      );
+    }
+    return items;
+  }
+
   render() {
     return (
       <header>
         <Navbar light expand="md">
-          <NavbarBrand href="/">reactstrap</NavbarBrand>
+          <NavbarBrand href="/">{this.props.manifest.title}</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              <NavItem>
-                <NavLink href="/components/">Components</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-              </NavItem>
+              {this.renderNavItems(this.props.pages)}
             </Nav>
           </Collapse>
         </Navbar>
@@ -68,4 +76,4 @@ class Navigation extends Component {
   }
 };
 
-export default connect(mapStateToProps)(Navigation); 
+export default connect(mapStateToProps)(GlobalHeader); 
