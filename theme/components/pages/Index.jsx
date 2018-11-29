@@ -20,6 +20,7 @@ function mapStateToProps(state) {
 class Index extends React.Component {
   constructor(props) {
     super(props);
+    console.log(this);
   }
   render() {
     return(
@@ -34,7 +35,7 @@ class Index extends React.Component {
           <Col sm={12}>
 
             <div id="index">
-              <h1>This is index</h1>
+              <h1>This is an index</h1>
             </div>
 
           </Col>

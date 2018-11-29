@@ -38,7 +38,6 @@ class GlobalHeader extends Component {
     };
 
     console.log(this);
-
   }
 
   toggle() {
@@ -49,10 +48,10 @@ class GlobalHeader extends Component {
 
   renderNavItems(pages) {
     let items = [];
-    for (let p = 0; pages.length > p; ++p) {
+    for (let index in pages) {
       items.push(
-        <NavItem>
-          <NavLink href={pages[p].path}>{pages[p].title}</NavLink>
+        <NavItem key={index}>
+          <NavLink href={pages[index].path}>{pages[index].title}</NavLink>
         </NavItem>
       );
     }

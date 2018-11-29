@@ -40945,7 +40945,6 @@ var GlobalHeader = function (_Component) {
     };
 
     console.log(_this);
-
     return _this;
   }
 
@@ -40960,14 +40959,14 @@ var GlobalHeader = function (_Component) {
     key: 'renderNavItems',
     value: function renderNavItems(pages) {
       var items = [];
-      for (var p = 0; pages.length > p; ++p) {
+      for (var index in pages) {
         items.push(_react2.default.createElement(
           _reactstrap.NavItem,
-          null,
+          { key: index },
           _react2.default.createElement(
             _reactstrap.NavLink,
-            { href: pages[p].path },
-            pages[p].title
+            { href: pages[index].path },
+            pages[index].title
           )
         ));
       }
@@ -41062,7 +41061,10 @@ var Index = function (_React$Component) {
   function Index(props) {
     _classCallCheck(this, Index);
 
-    return _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
+
+    console.log(_this);
+    return _this;
   }
 
   _createClass(Index, [{
@@ -41093,7 +41095,7 @@ var Index = function (_React$Component) {
               _react2.default.createElement(
                 'h1',
                 null,
-                'This is index'
+                'This is an index'
               )
             )
           )
@@ -41137,12 +41139,25 @@ const calcite = {
 /*!************************************!*\
   !*** ./theme/reducers/manifest.js ***!
   \************************************/
-/*! exports provided: default */
+/*! exports provided: GET_MANIFEST, getManifest, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GET_MANIFEST", function() { return GET_MANIFEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getManifest", function() { return getManifest; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return manifest; });
+const GET_MANIFEST = 'GET_MANIFEST';
+
+function getManifest() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: GET_MANIFEST,
+      payload: getState()
+    })
+  }
+}
+
 // MAIN REDUCER
 function manifest(
   state = [],
@@ -41155,6 +41170,8 @@ function manifest(
   switch (action.type) {
     default:
       return newState;
+    case GET_MANIFEST:
+      return action.payload.manifest;
   }
 }
 
@@ -41164,12 +41181,25 @@ function manifest(
 /*!*********************************!*\
   !*** ./theme/reducers/pages.js ***!
   \*********************************/
-/*! exports provided: default */
+/*! exports provided: GET_PAGES, getPages, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GET_PAGES", function() { return GET_PAGES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPages", function() { return getPages; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return pages; });
+const GET_PAGES = 'GET_PAGES';
+
+function getPages() {
+  return (dispatch, getState) => {
+    dispatch({
+      type: GET_PAGES,
+      payload: getState()
+    })
+  }
+}
+
 // MAIN REDUCER
 function pages(
   state = [],
@@ -41182,6 +41212,8 @@ function pages(
   switch (action.type) {
     default:
       return newState;
+    case GET_PAGES:
+      return action.payload.pages;
   }
 }
 
