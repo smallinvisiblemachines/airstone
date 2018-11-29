@@ -12,6 +12,7 @@ import promise from 'redux-promise-middleware';
 // THEME
 import theme from './theme/index';
 import rootReducer from './theme/reducers/root';
+import Head from './theme/components/Head.jsx';
 
 // UTILS
 import generateStore from './utils/generateStore.js';
@@ -41,7 +42,10 @@ const Client = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        { renderRoutes(routes) }
+        <React.Fragment>
+          <Head/>
+          { renderRoutes(routes) }
+        </React.Fragment>
       </BrowserRouter>
     </Provider>
   );

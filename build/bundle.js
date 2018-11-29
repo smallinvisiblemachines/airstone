@@ -130,6 +130,10 @@ var _root = __webpack_require__(/*! ./theme/reducers/root */ "./theme/reducers/r
 
 var _root2 = _interopRequireDefault(_root);
 
+var _Head = __webpack_require__(/*! ./theme/components/Head.jsx */ "./theme/components/Head.jsx");
+
+var _Head2 = _interopRequireDefault(_Head);
+
 var _generateStore = __webpack_require__(/*! ./utils/generateStore.js */ "./utils/generateStore.js");
 
 var _generateStore2 = _interopRequireDefault(_generateStore);
@@ -145,10 +149,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 */
 
 // UTILS
-
+// IMPORTS
+var state = window.__PRELOADED_STATE__;
 
 // THEME
-var state = window.__PRELOADED_STATE__; // IMPORTS
 
 console.log('PRELOADED STATE:', state);
 
@@ -163,7 +167,12 @@ var Client = function Client() {
     _react2.default.createElement(
       _BrowserRouter2.default,
       null,
-      (0, _reactRouterConfig.renderRoutes)(routes)
+      _react2.default.createElement(
+        _react2.default.Fragment,
+        null,
+        _react2.default.createElement(_Head2.default, null),
+        (0, _reactRouterConfig.renderRoutes)(routes)
+      )
     )
   );
 };
@@ -324,6 +333,210 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	} else {}
+}());
+
+
+/***/ }),
+
+/***/ "./node_modules/deep-equal/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/deep-equal/index.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var pSlice = Array.prototype.slice;
+var objectKeys = __webpack_require__(/*! ./lib/keys.js */ "./node_modules/deep-equal/lib/keys.js");
+var isArguments = __webpack_require__(/*! ./lib/is_arguments.js */ "./node_modules/deep-equal/lib/is_arguments.js");
+
+var deepEqual = module.exports = function (actual, expected, opts) {
+  if (!opts) opts = {};
+  // 7.1. All identical values are equivalent, as determined by ===.
+  if (actual === expected) {
+    return true;
+
+  } else if (actual instanceof Date && expected instanceof Date) {
+    return actual.getTime() === expected.getTime();
+
+  // 7.3. Other pairs that do not both pass typeof value == 'object',
+  // equivalence is determined by ==.
+  } else if (!actual || !expected || typeof actual != 'object' && typeof expected != 'object') {
+    return opts.strict ? actual === expected : actual == expected;
+
+  // 7.4. For all other Object pairs, including Array objects, equivalence is
+  // determined by having the same number of owned properties (as verified
+  // with Object.prototype.hasOwnProperty.call), the same set of keys
+  // (although not necessarily the same order), equivalent values for every
+  // corresponding key, and an identical 'prototype' property. Note: this
+  // accounts for both named and indexed properties on Arrays.
+  } else {
+    return objEquiv(actual, expected, opts);
+  }
+}
+
+function isUndefinedOrNull(value) {
+  return value === null || value === undefined;
+}
+
+function isBuffer (x) {
+  if (!x || typeof x !== 'object' || typeof x.length !== 'number') return false;
+  if (typeof x.copy !== 'function' || typeof x.slice !== 'function') {
+    return false;
+  }
+  if (x.length > 0 && typeof x[0] !== 'number') return false;
+  return true;
+}
+
+function objEquiv(a, b, opts) {
+  var i, key;
+  if (isUndefinedOrNull(a) || isUndefinedOrNull(b))
+    return false;
+  // an identical 'prototype' property.
+  if (a.prototype !== b.prototype) return false;
+  //~~~I've managed to break Object.keys through screwy arguments passing.
+  //   Converting to array solves the problem.
+  if (isArguments(a)) {
+    if (!isArguments(b)) {
+      return false;
+    }
+    a = pSlice.call(a);
+    b = pSlice.call(b);
+    return deepEqual(a, b, opts);
+  }
+  if (isBuffer(a)) {
+    if (!isBuffer(b)) {
+      return false;
+    }
+    if (a.length !== b.length) return false;
+    for (i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+  try {
+    var ka = objectKeys(a),
+        kb = objectKeys(b);
+  } catch (e) {//happens when one is a string literal and the other isn't
+    return false;
+  }
+  // having the same number of owned properties (keys incorporates
+  // hasOwnProperty)
+  if (ka.length != kb.length)
+    return false;
+  //the same set of keys (although not necessarily the same order),
+  ka.sort();
+  kb.sort();
+  //~~~cheap key test
+  for (i = ka.length - 1; i >= 0; i--) {
+    if (ka[i] != kb[i])
+      return false;
+  }
+  //equivalent values for every corresponding key, and
+  //~~~possibly expensive deep test
+  for (i = ka.length - 1; i >= 0; i--) {
+    key = ka[i];
+    if (!deepEqual(a[key], b[key], opts)) return false;
+  }
+  return typeof a === typeof b;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/deep-equal/lib/is_arguments.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/deep-equal/lib/is_arguments.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var supportsArgumentsClass = (function(){
+  return Object.prototype.toString.call(arguments)
+})() == '[object Arguments]';
+
+exports = module.exports = supportsArgumentsClass ? supported : unsupported;
+
+exports.supported = supported;
+function supported(object) {
+  return Object.prototype.toString.call(object) == '[object Arguments]';
+};
+
+exports.unsupported = unsupported;
+function unsupported(object){
+  return object &&
+    typeof object == 'object' &&
+    typeof object.length == 'number' &&
+    Object.prototype.hasOwnProperty.call(object, 'callee') &&
+    !Object.prototype.propertyIsEnumerable.call(object, 'callee') ||
+    false;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/deep-equal/lib/keys.js":
+/*!*********************************************!*\
+  !*** ./node_modules/deep-equal/lib/keys.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+exports = module.exports = typeof Object.keys === 'function'
+  ? Object.keys : shim;
+
+exports.shim = shim;
+function shim (obj) {
+  var keys = [];
+  for (var key in obj) keys.push(key);
+  return keys;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/exenv/index.js":
+/*!*************************************!*\
+  !*** ./node_modules/exenv/index.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+  Copyright (c) 2015 Jed Watson.
+  Based on code that is Copyright 2013-2015, Facebook, Inc.
+  All rights reserved.
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var canUseDOM = !!(
+		typeof window !== 'undefined' &&
+		window.document &&
+		window.document.createElement
+	);
+
+	var ExecutionEnvironment = {
+
+		canUseDOM: canUseDOM,
+
+		canUseWorkers: typeof Worker !== 'undefined',
+
+		canUseEventListeners:
+			canUseDOM && !!(window.addEventListener || window.attachEvent),
+
+		canUseViewport: canUseDOM && !!window.screen
+
+	};
+
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+			return ExecutionEnvironment;
+		}).call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {}
+
 }());
 
 
@@ -24312,6 +24525,2263 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/react-fast-compare/index.js":
+/*!**************************************************!*\
+  !*** ./node_modules/react-fast-compare/index.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isArray = Array.isArray;
+var keyList = Object.keys;
+var hasProp = Object.prototype.hasOwnProperty;
+var hasElementType = typeof Element !== 'undefined';
+
+function equal(a, b) {
+  // fast-deep-equal index.js 2.0.1
+  if (a === b) return true;
+
+  if (a && b && typeof a == 'object' && typeof b == 'object') {
+    var arrA = isArray(a)
+      , arrB = isArray(b)
+      , i
+      , length
+      , key;
+
+    if (arrA && arrB) {
+      length = a.length;
+      if (length != b.length) return false;
+      for (i = length; i-- !== 0;)
+        if (!equal(a[i], b[i])) return false;
+      return true;
+    }
+
+    if (arrA != arrB) return false;
+
+    var dateA = a instanceof Date
+      , dateB = b instanceof Date;
+    if (dateA != dateB) return false;
+    if (dateA && dateB) return a.getTime() == b.getTime();
+
+    var regexpA = a instanceof RegExp
+      , regexpB = b instanceof RegExp;
+    if (regexpA != regexpB) return false;
+    if (regexpA && regexpB) return a.toString() == b.toString();
+
+    var keys = keyList(a);
+    length = keys.length;
+
+    if (length !== keyList(b).length)
+      return false;
+
+    for (i = length; i-- !== 0;)
+      if (!hasProp.call(b, keys[i])) return false;
+    // end fast-deep-equal
+
+    // start react-fast-compare
+    // custom handling for DOM elements
+    if (hasElementType && a instanceof Element && b instanceof Element)
+      return a === b;
+
+    // custom handling for React
+    for (i = length; i-- !== 0;) {
+      key = keys[i];
+      if (key === '_owner' && a.$$typeof) {
+        // React-specific: avoid traversing React elements' _owner.
+        //  _owner contains circular references
+        // and is not needed when comparing the actual elements (and not their owners)
+        // .$$typeof and ._store on just reasonable markers of a react element
+        continue;
+      } else {
+        // all other properties should be traversed as usual
+        if (!equal(a[key], b[key])) return false;
+      }
+    }
+    // end react-fast-compare
+
+    // fast-deep-equal index.js 2.0.1
+    return true;
+  }
+
+  return a !== a && b !== b;
+}
+// end fast-deep-equal
+
+module.exports = function exportedEqual(a, b) {
+  try {
+    return equal(a, b);
+  } catch (error) {
+    if ((error.message && error.message.match(/stack|recursion/i)) || (error.number === -2146828260)) {
+      // warn on circular references, don't crash
+      // browsers give this different errors name and messages:
+      // chrome/safari: "RangeError", "Maximum call stack size exceeded"
+      // firefox: "InternalError", too much recursion"
+      // edge: "Error", "Out of stack space"
+      console.warn('Warning: react-fast-compare does not handle circular references.', error.name, error.message);
+      return false;
+    }
+    // some other error. we should definitely know about these
+    throw error;
+  }
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet-async/lib/Dispatcher.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-helmet-async/lib/Dispatcher.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _shallowequal = __webpack_require__(/*! shallowequal */ "./node_modules/shallowequal/index.js");
+
+var _shallowequal2 = _interopRequireDefault(_shallowequal);
+
+var _client = __webpack_require__(/*! ./client */ "./node_modules/react-helmet-async/lib/client.js");
+
+var _client2 = _interopRequireDefault(_client);
+
+var _server = __webpack_require__(/*! ./server */ "./node_modules/react-helmet-async/lib/server.js");
+
+var _server2 = _interopRequireDefault(_server);
+
+var _utils = __webpack_require__(/*! ./utils */ "./node_modules/react-helmet-async/lib/utils.js");
+
+var _Provider = __webpack_require__(/*! ./Provider */ "./node_modules/react-helmet-async/lib/Provider.js");
+
+var _Provider2 = _interopRequireDefault(_Provider);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Dispatcher = function (_Component) {
+  _inherits(Dispatcher, _Component);
+
+  function Dispatcher() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, Dispatcher);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Dispatcher.__proto__ || Object.getPrototypeOf(Dispatcher)).call.apply(_ref, [this].concat(args))), _this), _this.rendered = false, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(Dispatcher, [{
+    key: 'init',
+
+
+    // componentWillMount will be deprecated
+    // for SSR, initialize on first render
+    // constructor is also unsafe in StrictMode
+    value: function init() {
+      if (this.rendered) {
+        return;
+      }
+
+      this.rendered = true;
+
+      var helmetInstances = this.props.context.helmetInstances;
+
+      helmetInstances.add(this);
+      this.emitChange();
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps) {
+      return !(0, _shallowequal2.default)(nextProps, this.props);
+    }
+  }, {
+    key: 'emitChange',
+    value: function emitChange() {
+      var _props$context = this.props.context,
+          helmetInstances = _props$context.helmetInstances,
+          setHelmet = _props$context.setHelmet;
+
+      var serverState = null;
+      var state = (0, _utils.reducePropsToState)(helmetInstances.get().map(function (instance) {
+        var props = _extends({}, instance.props);
+        delete props.context;
+        return props;
+      }));
+      if (_Provider2.default.canUseDOM) {
+        (0, _client2.default)(state);
+      } else if (_server2.default) {
+        serverState = (0, _server2.default)(state);
+      }
+      setHelmet(serverState);
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      this.emitChange();
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      var helmetInstances = this.props.context.helmetInstances;
+
+      helmetInstances.remove(this);
+      this.emitChange();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      this.init();
+
+      return null;
+    }
+  }]);
+
+  return Dispatcher;
+}(_react.Component);
+
+Dispatcher.propTypes = {
+  context: _Provider.providerShape.isRequired
+};
+exports.default = Dispatcher;
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet-async/lib/Provider.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/react-helmet-async/lib/Provider.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.providerShape = exports.Context = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _server = __webpack_require__(/*! ./server */ "./node_modules/react-helmet-async/lib/server.js");
+
+var _server2 = _interopRequireDefault(_server);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/* eslint-disable react/prop-types */
+
+var defaultValue = {};
+
+var Context = exports.Context = _react2.default.createContext(defaultValue);
+
+var providerShape = exports.providerShape = _propTypes2.default.shape({
+  setHelmet: _propTypes2.default.func,
+  helmetInstances: _propTypes2.default.shape({
+    get: _propTypes2.default.func,
+    add: _propTypes2.default.func,
+    remove: _propTypes2.default.func
+  })
+});
+
+var canUseDOM = typeof document !== 'undefined';
+
+var Provider = function (_Component) {
+  _inherits(Provider, _Component);
+
+  function Provider(props) {
+    _classCallCheck(this, Provider);
+
+    var _this = _possibleConstructorReturn(this, (Provider.__proto__ || Object.getPrototypeOf(Provider)).call(this, props));
+
+    _this.instances = [];
+    _this.value = {
+      setHelmet: function setHelmet(serverState) {
+        _this.props.context.helmet = serverState;
+      },
+      helmetInstances: {
+        get: function get() {
+          return _this.instances;
+        },
+        add: function add(instance) {
+          _this.instances.push(instance);
+        },
+        remove: function remove(instance) {
+          var index = _this.instances.indexOf(instance);
+          _this.instances.splice(index, 1);
+        }
+      }
+    };
+
+
+    if (!Provider.canUseDOM) {
+      props.context.helmet = (0, _server2.default)({
+        baseTag: [],
+        bodyAttributes: {},
+        encodeSpecialCharacters: true,
+        htmlAttributes: {},
+        linkTags: [],
+        metaTags: [],
+        noscriptTags: [],
+        scriptTags: [],
+        styleTags: [],
+        title: '',
+        titleAttributes: {}
+      });
+    }
+    return _this;
+  }
+
+  _createClass(Provider, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        Context.Provider,
+        { value: this.value },
+        this.props.children
+      );
+    }
+  }]);
+
+  return Provider;
+}(_react.Component);
+
+Provider.canUseDOM = canUseDOM;
+Provider.propTypes = {
+  context: _propTypes2.default.shape({}),
+  children: _propTypes2.default.node.isRequired
+};
+Provider.defaultProps = {
+  context: {}
+};
+exports.default = Provider;
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet-async/lib/client.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/react-helmet-async/lib/client.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.requestAnimationFrame = undefined;
+
+var _constants = __webpack_require__(/*! ./constants */ "./node_modules/react-helmet-async/lib/constants.js");
+
+var _utils = __webpack_require__(/*! ./utils */ "./node_modules/react-helmet-async/lib/utils.js");
+
+var rafPolyfill = function () {
+  var clock = Date.now();
+
+  return function (callback) {
+    var currentTime = Date.now();
+
+    if (currentTime - clock > 16) {
+      clock = currentTime;
+      callback(currentTime);
+    } else {
+      setTimeout(function () {
+        rafPolyfill(callback);
+      }, 0);
+    }
+  };
+}();
+
+var updateTags = function updateTags(type, tags) {
+  var headElement = document.head || document.querySelector(_constants.TAG_NAMES.HEAD);
+  var tagNodes = headElement.querySelectorAll(type + '[' + _constants.HELMET_ATTRIBUTE + ']');
+  var oldTags = [].slice.call(tagNodes);
+  var newTags = [];
+  var indexToDelete = void 0;
+
+  if (tags && tags.length) {
+    tags.forEach(function (tag) {
+      var newElement = document.createElement(type);
+
+      // eslint-disable-next-line
+      for (var attribute in tag) {
+        if (Object.prototype.hasOwnProperty.call(tag, attribute)) {
+          if (attribute === _constants.TAG_PROPERTIES.INNER_HTML) {
+            newElement.innerHTML = tag.innerHTML;
+          } else if (attribute === _constants.TAG_PROPERTIES.CSS_TEXT) {
+            if (newElement.styleSheet) {
+              newElement.styleSheet.cssText = tag.cssText;
+            } else {
+              newElement.appendChild(document.createTextNode(tag.cssText));
+            }
+          } else {
+            var value = typeof tag[attribute] === 'undefined' ? '' : tag[attribute];
+            newElement.setAttribute(attribute, value);
+          }
+        }
+      }
+
+      newElement.setAttribute(_constants.HELMET_ATTRIBUTE, 'true');
+
+      // Remove a duplicate tag from domTagstoRemove, so it isn't cleared.
+      if (oldTags.some(function (existingTag, index) {
+        indexToDelete = index;
+        return newElement.isEqualNode(existingTag);
+      })) {
+        oldTags.splice(indexToDelete, 1);
+      } else {
+        newTags.push(newElement);
+      }
+    });
+  }
+
+  oldTags.forEach(function (tag) {
+    return tag.parentNode.removeChild(tag);
+  });
+  newTags.forEach(function (tag) {
+    return headElement.appendChild(tag);
+  });
+
+  return {
+    oldTags: oldTags,
+    newTags: newTags
+  };
+};
+
+var updateAttributes = function updateAttributes(tagName, attributes) {
+  var elementTag = document.getElementsByTagName(tagName)[0];
+
+  if (!elementTag) {
+    return;
+  }
+
+  var helmetAttributeString = elementTag.getAttribute(_constants.HELMET_ATTRIBUTE);
+  var helmetAttributes = helmetAttributeString ? helmetAttributeString.split(',') : [];
+  var attributesToRemove = [].concat(helmetAttributes);
+  var attributeKeys = Object.keys(attributes);
+
+  for (var i = 0; i < attributeKeys.length; i += 1) {
+    var attribute = attributeKeys[i];
+    var value = attributes[attribute] || '';
+
+    if (elementTag.getAttribute(attribute) !== value) {
+      elementTag.setAttribute(attribute, value);
+    }
+
+    if (helmetAttributes.indexOf(attribute) === -1) {
+      helmetAttributes.push(attribute);
+    }
+
+    var indexToSave = attributesToRemove.indexOf(attribute);
+    if (indexToSave !== -1) {
+      attributesToRemove.splice(indexToSave, 1);
+    }
+  }
+
+  for (var _i = attributesToRemove.length - 1; _i >= 0; _i -= 1) {
+    elementTag.removeAttribute(attributesToRemove[_i]);
+  }
+
+  if (helmetAttributes.length === attributesToRemove.length) {
+    elementTag.removeAttribute(_constants.HELMET_ATTRIBUTE);
+  } else if (elementTag.getAttribute(_constants.HELMET_ATTRIBUTE) !== attributeKeys.join(',')) {
+    elementTag.setAttribute(_constants.HELMET_ATTRIBUTE, attributeKeys.join(','));
+  }
+};
+
+var updateTitle = function updateTitle(title, attributes) {
+  if (typeof title !== 'undefined' && document.title !== title) {
+    document.title = (0, _utils.flattenArray)(title);
+  }
+
+  updateAttributes(_constants.TAG_NAMES.TITLE, attributes);
+};
+
+var commitTagChanges = function commitTagChanges(newState, cb) {
+  var baseTag = newState.baseTag,
+      bodyAttributes = newState.bodyAttributes,
+      htmlAttributes = newState.htmlAttributes,
+      linkTags = newState.linkTags,
+      metaTags = newState.metaTags,
+      noscriptTags = newState.noscriptTags,
+      onChangeClientState = newState.onChangeClientState,
+      scriptTags = newState.scriptTags,
+      styleTags = newState.styleTags,
+      title = newState.title,
+      titleAttributes = newState.titleAttributes;
+
+  updateAttributes(_constants.TAG_NAMES.BODY, bodyAttributes);
+  updateAttributes(_constants.TAG_NAMES.HTML, htmlAttributes);
+
+  updateTitle(title, titleAttributes);
+
+  var tagUpdates = {
+    baseTag: updateTags(_constants.TAG_NAMES.BASE, baseTag),
+    linkTags: updateTags(_constants.TAG_NAMES.LINK, linkTags),
+    metaTags: updateTags(_constants.TAG_NAMES.META, metaTags),
+    noscriptTags: updateTags(_constants.TAG_NAMES.NOSCRIPT, noscriptTags),
+    scriptTags: updateTags(_constants.TAG_NAMES.SCRIPT, scriptTags),
+    styleTags: updateTags(_constants.TAG_NAMES.STYLE, styleTags)
+  };
+
+  var addedTags = {};
+  var removedTags = {};
+
+  Object.keys(tagUpdates).forEach(function (tagType) {
+    var _tagUpdates$tagType = tagUpdates[tagType],
+        newTags = _tagUpdates$tagType.newTags,
+        oldTags = _tagUpdates$tagType.oldTags;
+
+
+    if (newTags.length) {
+      addedTags[tagType] = newTags;
+    }
+    if (oldTags.length) {
+      removedTags[tagType] = tagUpdates[tagType].oldTags;
+    }
+  });
+
+  if (cb) {
+    cb();
+  }
+
+  onChangeClientState(newState, addedTags, removedTags);
+};
+
+var cafPolyfill = function cafPolyfill(id) {
+  return clearTimeout(id);
+};
+
+var requestAnimationFrame = exports.requestAnimationFrame = typeof window !== 'undefined' ? window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || rafPolyfill : global.requestAnimationFrame || rafPolyfill;
+
+var cancelAnimationFrame = typeof window !== 'undefined' ? window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || cafPolyfill : global.cancelAnimationFrame || cafPolyfill;
+
+// eslint-disable-next-line
+var _helmetCallback = null;
+
+var handleStateChangeOnClient = function handleStateChangeOnClient(newState) {
+  if (_helmetCallback) {
+    cancelAnimationFrame(_helmetCallback);
+  }
+
+  if (newState.defer) {
+    _helmetCallback = requestAnimationFrame(function () {
+      commitTagChanges(newState, function () {
+        _helmetCallback = null;
+      });
+    });
+  } else {
+    commitTagChanges(newState);
+    _helmetCallback = null;
+  }
+};
+
+exports.default = handleStateChangeOnClient;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet-async/lib/constants.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/react-helmet-async/lib/constants.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var TAG_PROPERTIES = exports.TAG_PROPERTIES = {
+  CHARSET: 'charset',
+  CSS_TEXT: 'cssText',
+  HREF: 'href',
+  HTTPEQUIV: 'http-equiv',
+  INNER_HTML: 'innerHTML',
+  ITEM_PROP: 'itemprop',
+  NAME: 'name',
+  PROPERTY: 'property',
+  REL: 'rel',
+  SRC: 'src'
+};
+
+var ATTRIBUTE_NAMES = exports.ATTRIBUTE_NAMES = {
+  BODY: 'bodyAttributes',
+  HTML: 'htmlAttributes',
+  TITLE: 'titleAttributes'
+};
+
+var TAG_NAMES = exports.TAG_NAMES = {
+  BASE: 'base',
+  BODY: 'body',
+  HEAD: 'head',
+  HTML: 'html',
+  LINK: 'link',
+  META: 'meta',
+  NOSCRIPT: 'noscript',
+  SCRIPT: 'script',
+  STYLE: 'style',
+  TITLE: 'title',
+  FRAGMENT: 'Symbol(react.fragment)'
+};
+
+var VALID_TAG_NAMES = exports.VALID_TAG_NAMES = Object.keys(TAG_NAMES).map(function (name) {
+  return TAG_NAMES[name];
+});
+
+var REACT_TAG_MAP = exports.REACT_TAG_MAP = {
+  accesskey: 'accessKey',
+  charset: 'charSet',
+  class: 'className',
+  contenteditable: 'contentEditable',
+  contextmenu: 'contextMenu',
+  'http-equiv': 'httpEquiv',
+  itemprop: 'itemProp',
+  tabindex: 'tabIndex'
+};
+
+var HTML_TAG_MAP = exports.HTML_TAG_MAP = Object.keys(REACT_TAG_MAP).reduce(function (obj, key) {
+  obj[REACT_TAG_MAP[key]] = key;
+  return obj;
+}, {});
+
+var HELMET_ATTRIBUTE = exports.HELMET_ATTRIBUTE = 'data-rh';
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet-async/lib/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/react-helmet-async/lib/index.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.HelmetProvider = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Provider = __webpack_require__(/*! ./Provider */ "./node_modules/react-helmet-async/lib/Provider.js");
+
+Object.defineProperty(exports, 'HelmetProvider', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_Provider).default;
+  }
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _reactFastCompare = __webpack_require__(/*! react-fast-compare */ "./node_modules/react-fast-compare/index.js");
+
+var _reactFastCompare2 = _interopRequireDefault(_reactFastCompare);
+
+var _invariant = __webpack_require__(/*! invariant */ "./node_modules/invariant/browser.js");
+
+var _invariant2 = _interopRequireDefault(_invariant);
+
+var _Dispatcher = __webpack_require__(/*! ./Dispatcher */ "./node_modules/react-helmet-async/lib/Dispatcher.js");
+
+var _Dispatcher2 = _interopRequireDefault(_Dispatcher);
+
+var _constants = __webpack_require__(/*! ./constants */ "./node_modules/react-helmet-async/lib/constants.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/* eslint-disable class-methods-use-this */
+
+var Helmet = function (_Component) {
+  _inherits(Helmet, _Component);
+
+  function Helmet() {
+    _classCallCheck(this, Helmet);
+
+    return _possibleConstructorReturn(this, (Helmet.__proto__ || Object.getPrototypeOf(Helmet)).apply(this, arguments));
+  }
+
+  _createClass(Helmet, [{
+    key: 'shouldComponentUpdate',
+
+    /**
+     * @param {Object} base: {"target": "_blank", "href": "http://mysite.com/"}
+     * @param {Object} bodyAttributes: {"className": "root"}
+     * @param {String} defaultTitle: "Default Title"
+     * @param {Boolean} defer: true
+     * @param {Boolean} encodeSpecialCharacters: true
+     * @param {Object} htmlAttributes: {"lang": "en", "amp": undefined}
+     * @param {Array} link: [{"rel": "canonical", "href": "http://mysite.com/example"}]
+     * @param {Array} meta: [{"name": "description", "content": "Test description"}]
+     * @param {Array} noscript: [{"innerHTML": "<img src='http://mysite.com/js/test.js'"}]
+     * @param {Function} onChangeClientState: "(newState) => console.log(newState)"
+     * @param {Array} script: [{"type": "text/javascript", "src": "http://mysite.com/js/test.js"}]
+     * @param {Array} style: [{"type": "text/css", "cssText": "div { display: block; color: blue; }"}]
+     * @param {String} title: "Title"
+     * @param {Object} titleAttributes: {"itemprop": "name"}
+     * @param {String} titleTemplate: "MySite.com - %s"
+     */
+    /* eslint-disable react/prop-types, react/forbid-prop-types, react/require-default-props */
+    value: function shouldComponentUpdate(nextProps) {
+      return !(0, _reactFastCompare2.default)(this.props, nextProps);
+    }
+    /* eslint-enable react/prop-types, react/forbid-prop-types, react/require-default-props */
+
+  }, {
+    key: 'mapNestedChildrenToProps',
+    value: function mapNestedChildrenToProps(child, nestedChildren) {
+      if (!nestedChildren) {
+        return null;
+      }
+
+      switch (child.type) {
+        case _constants.TAG_NAMES.SCRIPT:
+        case _constants.TAG_NAMES.NOSCRIPT:
+          return {
+            innerHTML: nestedChildren
+          };
+
+        case _constants.TAG_NAMES.STYLE:
+          return {
+            cssText: nestedChildren
+          };
+        default:
+          throw new Error('<' + child.type + ' /> elements are self-closing and can not contain children. Refer to our API for more information.');
+      }
+    }
+  }, {
+    key: 'flattenArrayTypeChildren',
+    value: function flattenArrayTypeChildren(_ref) {
+      var child = _ref.child,
+          arrayTypeChildren = _ref.arrayTypeChildren,
+          newChildProps = _ref.newChildProps,
+          nestedChildren = _ref.nestedChildren;
+
+      return _extends({}, arrayTypeChildren, _defineProperty({}, child.type, [].concat(_toConsumableArray(arrayTypeChildren[child.type] || []), [_extends({}, newChildProps, this.mapNestedChildrenToProps(child, nestedChildren))])));
+    }
+  }, {
+    key: 'mapObjectTypeChildren',
+    value: function mapObjectTypeChildren(_ref2) {
+      var _extends3;
+
+      var child = _ref2.child,
+          newProps = _ref2.newProps,
+          newChildProps = _ref2.newChildProps,
+          nestedChildren = _ref2.nestedChildren;
+
+      switch (child.type) {
+        case _constants.TAG_NAMES.TITLE:
+          return _extends({}, newProps, (_extends3 = {}, _defineProperty(_extends3, child.type, nestedChildren), _defineProperty(_extends3, 'titleAttributes', _extends({}, newChildProps)), _extends3));
+
+        case _constants.TAG_NAMES.BODY:
+          return _extends({}, newProps, {
+            bodyAttributes: _extends({}, newChildProps)
+          });
+
+        case _constants.TAG_NAMES.HTML:
+          return _extends({}, newProps, {
+            htmlAttributes: _extends({}, newChildProps)
+          });
+        default:
+          return _extends({}, newProps, _defineProperty({}, child.type, _extends({}, newChildProps)));
+      }
+    }
+  }, {
+    key: 'mapArrayTypeChildrenToProps',
+    value: function mapArrayTypeChildrenToProps(arrayTypeChildren, newProps) {
+      var newFlattenedProps = _extends({}, newProps);
+
+      Object.keys(arrayTypeChildren).forEach(function (arrayChildName) {
+        newFlattenedProps = _extends({}, newFlattenedProps, _defineProperty({}, arrayChildName, arrayTypeChildren[arrayChildName]));
+      });
+
+      return newFlattenedProps;
+    }
+  }, {
+    key: 'warnOnInvalidChildren',
+    value: function warnOnInvalidChildren(child, nestedChildren) {
+      (0, _invariant2.default)(_constants.VALID_TAG_NAMES.some(function (name) {
+        return child.type === name;
+      }), typeof child.type === 'function' ? 'You may be attempting to nest <Helmet> components within each other, which is not allowed. Refer to our API for more information.' : 'Only elements types ' + _constants.VALID_TAG_NAMES.join(', ') + ' are allowed. Helmet does not support rendering <' + child.type + '> elements. Refer to our API for more information.');
+
+      (0, _invariant2.default)(!nestedChildren || typeof nestedChildren === 'string' || Array.isArray(nestedChildren) && !nestedChildren.some(function (nestedChild) {
+        return typeof nestedChild !== 'string';
+      }), 'Helmet expects a string as a child of <' + child.type + '>. Did you forget to wrap your children in braces? ( <' + child.type + '>{``}</' + child.type + '> ) Refer to our API for more information.');
+
+      return true;
+    }
+  }, {
+    key: 'mapChildrenToProps',
+    value: function mapChildrenToProps(children, newProps) {
+      var _this2 = this;
+
+      var arrayTypeChildren = {};
+
+      _react2.default.Children.forEach(children, function (child) {
+        if (!child || !child.props) {
+          return;
+        }
+
+        var _child$props = child.props,
+            nestedChildren = _child$props.children,
+            childProps = _objectWithoutProperties(_child$props, ['children']);
+        // convert React props to HTML attributes
+
+
+        var newChildProps = Object.keys(childProps).reduce(function (obj, key) {
+          obj[_constants.HTML_TAG_MAP[key] || key] = childProps[key];
+          return obj;
+        }, {});
+
+        var type = child.type;
+
+        if ((typeof type === 'undefined' ? 'undefined' : _typeof(type)) === 'symbol') {
+          type = type.toString();
+        } else {
+          _this2.warnOnInvalidChildren(child, nestedChildren);
+        }
+
+        switch (type) {
+          case _constants.TAG_NAMES.FRAGMENT:
+            newProps = _this2.mapChildrenToProps(nestedChildren, newProps);
+            break;
+
+          case _constants.TAG_NAMES.LINK:
+          case _constants.TAG_NAMES.META:
+          case _constants.TAG_NAMES.NOSCRIPT:
+          case _constants.TAG_NAMES.SCRIPT:
+          case _constants.TAG_NAMES.STYLE:
+            arrayTypeChildren = _this2.flattenArrayTypeChildren({
+              child: child,
+              arrayTypeChildren: arrayTypeChildren,
+              newChildProps: newChildProps,
+              nestedChildren: nestedChildren
+            });
+            break;
+
+          default:
+            newProps = _this2.mapObjectTypeChildren({
+              child: child,
+              newProps: newProps,
+              newChildProps: newChildProps,
+              nestedChildren: nestedChildren
+            });
+            break;
+        }
+      });
+
+      return this.mapArrayTypeChildrenToProps(arrayTypeChildren, newProps);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          children = _props.children,
+          props = _objectWithoutProperties(_props, ['children']);
+
+      var newProps = _extends({}, props);
+
+      if (children) {
+        newProps = this.mapChildrenToProps(children, newProps);
+      }
+
+      return _react2.default.createElement(
+        _Provider.Context.Consumer,
+        null,
+        function (context) {
+          return _react2.default.createElement(_Dispatcher2.default, _extends({}, newProps, { context: context }));
+        }
+      );
+    }
+  }]);
+
+  return Helmet;
+}(_react.Component);
+
+Helmet.propTypes = {
+  base: _propTypes2.default.object,
+  bodyAttributes: _propTypes2.default.object,
+  children: _propTypes2.default.oneOfType([_propTypes2.default.arrayOf(_propTypes2.default.node), _propTypes2.default.node]),
+  defaultTitle: _propTypes2.default.string,
+  defer: _propTypes2.default.bool,
+  encodeSpecialCharacters: _propTypes2.default.bool,
+  htmlAttributes: _propTypes2.default.object,
+  link: _propTypes2.default.arrayOf(_propTypes2.default.object),
+  meta: _propTypes2.default.arrayOf(_propTypes2.default.object),
+  noscript: _propTypes2.default.arrayOf(_propTypes2.default.object),
+  onChangeClientState: _propTypes2.default.func,
+  script: _propTypes2.default.arrayOf(_propTypes2.default.object),
+  style: _propTypes2.default.arrayOf(_propTypes2.default.object),
+  title: _propTypes2.default.string,
+  titleAttributes: _propTypes2.default.object,
+  titleTemplate: _propTypes2.default.string
+};
+Helmet.defaultProps = {
+  defer: true,
+  encodeSpecialCharacters: true
+};
+exports.default = Helmet;
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet-async/lib/server.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/react-helmet-async/lib/server.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _constants = __webpack_require__(/*! ./constants */ "./node_modules/react-helmet-async/lib/constants.js");
+
+var _utils = __webpack_require__(/*! ./utils */ "./node_modules/react-helmet-async/lib/utils.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var SELF_CLOSING_TAGS = [_constants.TAG_NAMES.NOSCRIPT, _constants.TAG_NAMES.SCRIPT, _constants.TAG_NAMES.STYLE];
+
+var encodeSpecialCharacters = function encodeSpecialCharacters(str) {
+  var encode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+  if (encode === false) {
+    return String(str);
+  }
+
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+};
+
+var generateElementAttributesAsString = function generateElementAttributesAsString(attributes) {
+  return Object.keys(attributes).reduce(function (str, key) {
+    var attr = typeof attributes[key] !== 'undefined' ? key + '="' + attributes[key] + '"' : '' + key;
+    return str ? str + ' ' + attr : attr;
+  }, '');
+};
+
+var generateTitleAsString = function generateTitleAsString(type, title, attributes, encode) {
+  var attributeString = generateElementAttributesAsString(attributes);
+  var flattenedTitle = (0, _utils.flattenArray)(title);
+  return attributeString ? '<' + type + ' ' + _constants.HELMET_ATTRIBUTE + '="true" ' + attributeString + '>' + encodeSpecialCharacters(flattenedTitle, encode) + '</' + type + '>' : '<' + type + ' ' + _constants.HELMET_ATTRIBUTE + '="true">' + encodeSpecialCharacters(flattenedTitle, encode) + '</' + type + '>';
+};
+
+var generateTagsAsString = function generateTagsAsString(type, tags, encode) {
+  return tags.reduce(function (str, tag) {
+    var attributeHtml = Object.keys(tag).filter(function (attribute) {
+      return !(attribute === _constants.TAG_PROPERTIES.INNER_HTML || attribute === _constants.TAG_PROPERTIES.CSS_TEXT);
+    }).reduce(function (string, attribute) {
+      var attr = typeof tag[attribute] === 'undefined' ? attribute : attribute + '="' + encodeSpecialCharacters(tag[attribute], encode) + '"';
+      return string ? string + ' ' + attr : attr;
+    }, '');
+
+    var tagContent = tag.innerHTML || tag.cssText || '';
+
+    var isSelfClosing = SELF_CLOSING_TAGS.indexOf(type) === -1;
+
+    return str + '<' + type + ' ' + _constants.HELMET_ATTRIBUTE + '="true" ' + attributeHtml + (isSelfClosing ? '/>' : '>' + tagContent + '</' + type + '>');
+  }, '');
+};
+
+var convertElementAttributesToReactProps = function convertElementAttributesToReactProps(attributes) {
+  var initProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  return Object.keys(attributes).reduce(function (obj, key) {
+    obj[_constants.REACT_TAG_MAP[key] || key] = attributes[key];
+    return obj;
+  }, initProps);
+};
+
+var generateTitleAsReactComponent = function generateTitleAsReactComponent(type, title, attributes) {
+  // assigning into an array to define toString function on it
+  var initProps = _defineProperty({
+    key: title
+  }, _constants.HELMET_ATTRIBUTE, true);
+  var props = convertElementAttributesToReactProps(attributes, initProps);
+
+  return [_react2.default.createElement(_constants.TAG_NAMES.TITLE, props, title)];
+};
+
+var generateTagsAsReactComponent = function generateTagsAsReactComponent(type, tags) {
+  return tags.map(function (tag, i) {
+    var mappedTag = _defineProperty({
+      key: i
+    }, _constants.HELMET_ATTRIBUTE, true);
+
+    Object.keys(tag).forEach(function (attribute) {
+      var mappedAttribute = _constants.REACT_TAG_MAP[attribute] || attribute;
+
+      if (mappedAttribute === _constants.TAG_PROPERTIES.INNER_HTML || mappedAttribute === _constants.TAG_PROPERTIES.CSS_TEXT) {
+        var content = tag.innerHTML || tag.cssText;
+        mappedTag.dangerouslySetInnerHTML = { __html: content };
+      } else {
+        mappedTag[mappedAttribute] = tag[attribute];
+      }
+    });
+
+    return _react2.default.createElement(type, mappedTag);
+  });
+};
+
+var getMethodsForTag = function getMethodsForTag(type, tags, encode) {
+  switch (type) {
+    case _constants.TAG_NAMES.TITLE:
+      return {
+        toComponent: function toComponent() {
+          return generateTitleAsReactComponent(type, tags.title, tags.titleAttributes, encode);
+        },
+        toString: function toString() {
+          return generateTitleAsString(type, tags.title, tags.titleAttributes, encode);
+        }
+      };
+    case _constants.ATTRIBUTE_NAMES.BODY:
+    case _constants.ATTRIBUTE_NAMES.HTML:
+      return {
+        toComponent: function toComponent() {
+          return convertElementAttributesToReactProps(tags);
+        },
+        toString: function toString() {
+          return generateElementAttributesAsString(tags);
+        }
+      };
+    default:
+      return {
+        toComponent: function toComponent() {
+          return generateTagsAsReactComponent(type, tags);
+        },
+        toString: function toString() {
+          return generateTagsAsString(type, tags, encode);
+        }
+      };
+  }
+};
+
+var mapStateOnServer = function mapStateOnServer(_ref) {
+  var baseTag = _ref.baseTag,
+      bodyAttributes = _ref.bodyAttributes,
+      encode = _ref.encode,
+      htmlAttributes = _ref.htmlAttributes,
+      linkTags = _ref.linkTags,
+      metaTags = _ref.metaTags,
+      noscriptTags = _ref.noscriptTags,
+      scriptTags = _ref.scriptTags,
+      styleTags = _ref.styleTags,
+      _ref$title = _ref.title,
+      title = _ref$title === undefined ? '' : _ref$title,
+      titleAttributes = _ref.titleAttributes;
+  return {
+    base: getMethodsForTag(_constants.TAG_NAMES.BASE, baseTag, encode),
+    bodyAttributes: getMethodsForTag(_constants.ATTRIBUTE_NAMES.BODY, bodyAttributes, encode),
+    htmlAttributes: getMethodsForTag(_constants.ATTRIBUTE_NAMES.HTML, htmlAttributes, encode),
+    link: getMethodsForTag(_constants.TAG_NAMES.LINK, linkTags, encode),
+    meta: getMethodsForTag(_constants.TAG_NAMES.META, metaTags, encode),
+    noscript: getMethodsForTag(_constants.TAG_NAMES.NOSCRIPT, noscriptTags, encode),
+    script: getMethodsForTag(_constants.TAG_NAMES.SCRIPT, scriptTags, encode),
+    style: getMethodsForTag(_constants.TAG_NAMES.STYLE, styleTags, encode),
+    title: getMethodsForTag(_constants.TAG_NAMES.TITLE, { title: title, titleAttributes: titleAttributes }, encode)
+  };
+};
+
+exports.default = mapStateOnServer;
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet-async/lib/utils.js":
+/*!******************************************************!*\
+  !*** ./node_modules/react-helmet-async/lib/utils.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.reducePropsToState = exports.flattenArray = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _constants = __webpack_require__(/*! ./constants */ "./node_modules/react-helmet-async/lib/constants.js");
+
+var HELMET_PROPS = {
+  DEFAULT_TITLE: 'defaultTitle',
+  DEFER: 'defer',
+  ENCODE_SPECIAL_CHARACTERS: 'encodeSpecialCharacters',
+  ON_CHANGE_CLIENT_STATE: 'onChangeClientState',
+  TITLE_TEMPLATE: 'titleTemplate'
+};
+
+var getInnermostProperty = function getInnermostProperty(propsList, property) {
+  for (var i = propsList.length - 1; i >= 0; i -= 1) {
+    var props = propsList[i];
+
+    if (Object.prototype.hasOwnProperty.call(props, property)) {
+      return props[property];
+    }
+  }
+
+  return null;
+};
+
+var getTitleFromPropsList = function getTitleFromPropsList(propsList) {
+  var innermostTitle = getInnermostProperty(propsList, _constants.TAG_NAMES.TITLE);
+  var innermostTemplate = getInnermostProperty(propsList, HELMET_PROPS.TITLE_TEMPLATE);
+  if (Array.isArray(innermostTitle)) {
+    innermostTitle = innermostTitle.join('');
+  }
+  if (innermostTemplate && innermostTitle) {
+    // use function arg to avoid need to escape $ characters
+    return innermostTemplate.replace(/%s/g, function () {
+      return innermostTitle;
+    });
+  }
+
+  var innermostDefaultTitle = getInnermostProperty(propsList, HELMET_PROPS.DEFAULT_TITLE);
+
+  return innermostTitle || innermostDefaultTitle || undefined;
+};
+
+var getOnChangeClientState = function getOnChangeClientState(propsList) {
+  return getInnermostProperty(propsList, HELMET_PROPS.ON_CHANGE_CLIENT_STATE) || function () {};
+};
+
+var getAttributesFromPropsList = function getAttributesFromPropsList(tagType, propsList) {
+  return propsList.filter(function (props) {
+    return typeof props[tagType] !== 'undefined';
+  }).map(function (props) {
+    return props[tagType];
+  }).reduce(function (tagAttrs, current) {
+    return _extends({}, tagAttrs, current);
+  }, {});
+};
+
+var getBaseTagFromPropsList = function getBaseTagFromPropsList(primaryAttributes, propsList) {
+  return propsList.filter(function (props) {
+    return typeof props[_constants.TAG_NAMES.BASE] !== 'undefined';
+  }).map(function (props) {
+    return props[_constants.TAG_NAMES.BASE];
+  }).reverse().reduce(function (innermostBaseTag, tag) {
+    if (!innermostBaseTag.length) {
+      var keys = Object.keys(tag);
+
+      for (var i = 0; i < keys.length; i += 1) {
+        var attributeKey = keys[i];
+        var lowerCaseAttributeKey = attributeKey.toLowerCase();
+
+        if (primaryAttributes.indexOf(lowerCaseAttributeKey) !== -1 && tag[lowerCaseAttributeKey]) {
+          return innermostBaseTag.concat(tag);
+        }
+      }
+    }
+
+    return innermostBaseTag;
+  }, []);
+};
+
+// eslint-disable-next-line no-console
+var warn = function warn(msg) {
+  return console && typeof console.warn === 'function' && console.warn(msg);
+};
+
+var getTagsFromPropsList = function getTagsFromPropsList(tagName, primaryAttributes, propsList) {
+  // Calculate list of tags, giving priority innermost component (end of the propslist)
+  var approvedSeenTags = {};
+
+  return propsList.filter(function (props) {
+    if (Array.isArray(props[tagName])) {
+      return true;
+    }
+    if (typeof props[tagName] !== 'undefined') {
+      warn('Helmet: ' + tagName + ' should be of type "Array". Instead found type "' + _typeof(props[tagName]) + '"');
+    }
+    return false;
+  }).map(function (props) {
+    return props[tagName];
+  }).reverse().reduce(function (approvedTags, instanceTags) {
+    var instanceSeenTags = {};
+
+    instanceTags.filter(function (tag) {
+      var primaryAttributeKey = void 0;
+      var keys = Object.keys(tag);
+      for (var i = 0; i < keys.length; i += 1) {
+        var attributeKey = keys[i];
+        var lowerCaseAttributeKey = attributeKey.toLowerCase();
+
+        // Special rule with link tags, since rel and href are both primary tags, rel takes priority
+        if (primaryAttributes.indexOf(lowerCaseAttributeKey) !== -1 && !(primaryAttributeKey === _constants.TAG_PROPERTIES.REL && tag[primaryAttributeKey].toLowerCase() === 'canonical') && !(lowerCaseAttributeKey === _constants.TAG_PROPERTIES.REL && tag[lowerCaseAttributeKey].toLowerCase() === 'stylesheet')) {
+          primaryAttributeKey = lowerCaseAttributeKey;
+        }
+        // Special case for innerHTML which doesn't work lowercased
+        if (primaryAttributes.indexOf(attributeKey) !== -1 && (attributeKey === _constants.TAG_PROPERTIES.INNER_HTML || attributeKey === _constants.TAG_PROPERTIES.CSS_TEXT || attributeKey === _constants.TAG_PROPERTIES.ITEM_PROP)) {
+          primaryAttributeKey = attributeKey;
+        }
+      }
+
+      if (!primaryAttributeKey || !tag[primaryAttributeKey]) {
+        return false;
+      }
+
+      var value = tag[primaryAttributeKey].toLowerCase();
+
+      if (!approvedSeenTags[primaryAttributeKey]) {
+        approvedSeenTags[primaryAttributeKey] = {};
+      }
+
+      if (!instanceSeenTags[primaryAttributeKey]) {
+        instanceSeenTags[primaryAttributeKey] = {};
+      }
+
+      if (!approvedSeenTags[primaryAttributeKey][value]) {
+        instanceSeenTags[primaryAttributeKey][value] = true;
+        return true;
+      }
+
+      return false;
+    }).reverse().forEach(function (tag) {
+      return approvedTags.push(tag);
+    });
+
+    // Update seen tags with tags from this instance
+    var keys = Object.keys(instanceSeenTags);
+    for (var i = 0; i < keys.length; i += 1) {
+      var attributeKey = keys[i];
+      var tagUnion = _extends({}, approvedSeenTags[attributeKey], instanceSeenTags[attributeKey]);
+
+      approvedSeenTags[attributeKey] = tagUnion;
+    }
+
+    return approvedTags;
+  }, []).reverse();
+};
+
+var reducePropsToState = function reducePropsToState(propsList) {
+  return {
+    baseTag: getBaseTagFromPropsList([_constants.TAG_PROPERTIES.HREF], propsList),
+    bodyAttributes: getAttributesFromPropsList(_constants.ATTRIBUTE_NAMES.BODY, propsList),
+    defer: getInnermostProperty(propsList, HELMET_PROPS.DEFER),
+    encode: getInnermostProperty(propsList, HELMET_PROPS.ENCODE_SPECIAL_CHARACTERS),
+    htmlAttributes: getAttributesFromPropsList(_constants.ATTRIBUTE_NAMES.HTML, propsList),
+    linkTags: getTagsFromPropsList(_constants.TAG_NAMES.LINK, [_constants.TAG_PROPERTIES.REL, _constants.TAG_PROPERTIES.HREF], propsList),
+    metaTags: getTagsFromPropsList(_constants.TAG_NAMES.META, [_constants.TAG_PROPERTIES.NAME, _constants.TAG_PROPERTIES.CHARSET, _constants.TAG_PROPERTIES.HTTPEQUIV, _constants.TAG_PROPERTIES.PROPERTY, _constants.TAG_PROPERTIES.ITEM_PROP], propsList),
+    noscriptTags: getTagsFromPropsList(_constants.TAG_NAMES.NOSCRIPT, [_constants.TAG_PROPERTIES.INNER_HTML], propsList),
+    onChangeClientState: getOnChangeClientState(propsList),
+    scriptTags: getTagsFromPropsList(_constants.TAG_NAMES.SCRIPT, [_constants.TAG_PROPERTIES.SRC, _constants.TAG_PROPERTIES.INNER_HTML], propsList),
+    styleTags: getTagsFromPropsList(_constants.TAG_NAMES.STYLE, [_constants.TAG_PROPERTIES.CSS_TEXT], propsList),
+    title: getTitleFromPropsList(propsList),
+    titleAttributes: getAttributesFromPropsList(_constants.ATTRIBUTE_NAMES.TITLE, propsList)
+  };
+};
+
+var flattenArray = exports.flattenArray = function flattenArray(possibleArray) {
+  return Array.isArray(possibleArray) ? possibleArray.join('') : possibleArray;
+};
+
+exports.reducePropsToState = reducePropsToState;
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet/lib/Helmet.js":
+/*!*************************************************!*\
+  !*** ./node_modules/react-helmet/lib/Helmet.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports.__esModule = true;
+exports.Helmet = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _reactSideEffect = __webpack_require__(/*! react-side-effect */ "./node_modules/react-side-effect/lib/index.js");
+
+var _reactSideEffect2 = _interopRequireDefault(_reactSideEffect);
+
+var _deepEqual = __webpack_require__(/*! deep-equal */ "./node_modules/deep-equal/index.js");
+
+var _deepEqual2 = _interopRequireDefault(_deepEqual);
+
+var _HelmetUtils = __webpack_require__(/*! ./HelmetUtils.js */ "./node_modules/react-helmet/lib/HelmetUtils.js");
+
+var _HelmetConstants = __webpack_require__(/*! ./HelmetConstants.js */ "./node_modules/react-helmet/lib/HelmetConstants.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Helmet = function Helmet(Component) {
+    var _class, _temp;
+
+    return _temp = _class = function (_React$Component) {
+        _inherits(HelmetWrapper, _React$Component);
+
+        function HelmetWrapper() {
+            _classCallCheck(this, HelmetWrapper);
+
+            return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
+        }
+
+        HelmetWrapper.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
+            return !(0, _deepEqual2.default)(this.props, nextProps);
+        };
+
+        HelmetWrapper.prototype.mapNestedChildrenToProps = function mapNestedChildrenToProps(child, nestedChildren) {
+            if (!nestedChildren) {
+                return null;
+            }
+
+            switch (child.type) {
+                case _HelmetConstants.TAG_NAMES.SCRIPT:
+                case _HelmetConstants.TAG_NAMES.NOSCRIPT:
+                    return {
+                        innerHTML: nestedChildren
+                    };
+
+                case _HelmetConstants.TAG_NAMES.STYLE:
+                    return {
+                        cssText: nestedChildren
+                    };
+            }
+
+            throw new Error("<" + child.type + " /> elements are self-closing and can not contain children. Refer to our API for more information.");
+        };
+
+        HelmetWrapper.prototype.flattenArrayTypeChildren = function flattenArrayTypeChildren(_ref) {
+            var _extends2;
+
+            var child = _ref.child,
+                arrayTypeChildren = _ref.arrayTypeChildren,
+                newChildProps = _ref.newChildProps,
+                nestedChildren = _ref.nestedChildren;
+
+            return _extends({}, arrayTypeChildren, (_extends2 = {}, _extends2[child.type] = [].concat(arrayTypeChildren[child.type] || [], [_extends({}, newChildProps, this.mapNestedChildrenToProps(child, nestedChildren))]), _extends2));
+        };
+
+        HelmetWrapper.prototype.mapObjectTypeChildren = function mapObjectTypeChildren(_ref2) {
+            var _extends3, _extends4;
+
+            var child = _ref2.child,
+                newProps = _ref2.newProps,
+                newChildProps = _ref2.newChildProps,
+                nestedChildren = _ref2.nestedChildren;
+
+            switch (child.type) {
+                case _HelmetConstants.TAG_NAMES.TITLE:
+                    return _extends({}, newProps, (_extends3 = {}, _extends3[child.type] = nestedChildren, _extends3.titleAttributes = _extends({}, newChildProps), _extends3));
+
+                case _HelmetConstants.TAG_NAMES.BODY:
+                    return _extends({}, newProps, {
+                        bodyAttributes: _extends({}, newChildProps)
+                    });
+
+                case _HelmetConstants.TAG_NAMES.HTML:
+                    return _extends({}, newProps, {
+                        htmlAttributes: _extends({}, newChildProps)
+                    });
+            }
+
+            return _extends({}, newProps, (_extends4 = {}, _extends4[child.type] = _extends({}, newChildProps), _extends4));
+        };
+
+        HelmetWrapper.prototype.mapArrayTypeChildrenToProps = function mapArrayTypeChildrenToProps(arrayTypeChildren, newProps) {
+            var newFlattenedProps = _extends({}, newProps);
+
+            Object.keys(arrayTypeChildren).forEach(function (arrayChildName) {
+                var _extends5;
+
+                newFlattenedProps = _extends({}, newFlattenedProps, (_extends5 = {}, _extends5[arrayChildName] = arrayTypeChildren[arrayChildName], _extends5));
+            });
+
+            return newFlattenedProps;
+        };
+
+        HelmetWrapper.prototype.warnOnInvalidChildren = function warnOnInvalidChildren(child, nestedChildren) {
+            if (true) {
+                if (!_HelmetConstants.VALID_TAG_NAMES.some(function (name) {
+                    return child.type === name;
+                })) {
+                    if (typeof child.type === "function") {
+                        return (0, _HelmetUtils.warn)("You may be attempting to nest <Helmet> components within each other, which is not allowed. Refer to our API for more information.");
+                    }
+
+                    return (0, _HelmetUtils.warn)("Only elements types " + _HelmetConstants.VALID_TAG_NAMES.join(", ") + " are allowed. Helmet does not support rendering <" + child.type + "> elements. Refer to our API for more information.");
+                }
+
+                if (nestedChildren && typeof nestedChildren !== "string" && (!Array.isArray(nestedChildren) || nestedChildren.some(function (nestedChild) {
+                    return typeof nestedChild !== "string";
+                }))) {
+                    throw new Error("Helmet expects a string as a child of <" + child.type + ">. Did you forget to wrap your children in braces? ( <" + child.type + ">{``}</" + child.type + "> ) Refer to our API for more information.");
+                }
+            }
+
+            return true;
+        };
+
+        HelmetWrapper.prototype.mapChildrenToProps = function mapChildrenToProps(children, newProps) {
+            var _this2 = this;
+
+            var arrayTypeChildren = {};
+
+            _react2.default.Children.forEach(children, function (child) {
+                if (!child || !child.props) {
+                    return;
+                }
+
+                var _child$props = child.props,
+                    nestedChildren = _child$props.children,
+                    childProps = _objectWithoutProperties(_child$props, ["children"]);
+
+                var newChildProps = (0, _HelmetUtils.convertReactPropstoHtmlAttributes)(childProps);
+
+                _this2.warnOnInvalidChildren(child, nestedChildren);
+
+                switch (child.type) {
+                    case _HelmetConstants.TAG_NAMES.LINK:
+                    case _HelmetConstants.TAG_NAMES.META:
+                    case _HelmetConstants.TAG_NAMES.NOSCRIPT:
+                    case _HelmetConstants.TAG_NAMES.SCRIPT:
+                    case _HelmetConstants.TAG_NAMES.STYLE:
+                        arrayTypeChildren = _this2.flattenArrayTypeChildren({
+                            child: child,
+                            arrayTypeChildren: arrayTypeChildren,
+                            newChildProps: newChildProps,
+                            nestedChildren: nestedChildren
+                        });
+                        break;
+
+                    default:
+                        newProps = _this2.mapObjectTypeChildren({
+                            child: child,
+                            newProps: newProps,
+                            newChildProps: newChildProps,
+                            nestedChildren: nestedChildren
+                        });
+                        break;
+                }
+            });
+
+            newProps = this.mapArrayTypeChildrenToProps(arrayTypeChildren, newProps);
+            return newProps;
+        };
+
+        HelmetWrapper.prototype.render = function render() {
+            var _props = this.props,
+                children = _props.children,
+                props = _objectWithoutProperties(_props, ["children"]);
+
+            var newProps = _extends({}, props);
+
+            if (children) {
+                newProps = this.mapChildrenToProps(children, newProps);
+            }
+
+            return _react2.default.createElement(Component, newProps);
+        };
+
+        _createClass(HelmetWrapper, null, [{
+            key: "canUseDOM",
+
+
+            // Component.peek comes from react-side-effect:
+            // For testing, you may use a static peek() method available on the returned component.
+            // It lets you get the current state without resetting the mounted instance stack.
+            // Don’t use it for anything other than testing.
+
+            /**
+            * @param {Object} base: {"target": "_blank", "href": "http://mysite.com/"}
+            * @param {Object} bodyAttributes: {"className": "root"}
+            * @param {String} defaultTitle: "Default Title"
+            * @param {Boolean} defer: true
+            * @param {Boolean} encodeSpecialCharacters: true
+            * @param {Object} htmlAttributes: {"lang": "en", "amp": undefined}
+            * @param {Array} link: [{"rel": "canonical", "href": "http://mysite.com/example"}]
+            * @param {Array} meta: [{"name": "description", "content": "Test description"}]
+            * @param {Array} noscript: [{"innerHTML": "<img src='http://mysite.com/js/test.js'"}]
+            * @param {Function} onChangeClientState: "(newState) => console.log(newState)"
+            * @param {Array} script: [{"type": "text/javascript", "src": "http://mysite.com/js/test.js"}]
+            * @param {Array} style: [{"type": "text/css", "cssText": "div { display: block; color: blue; }"}]
+            * @param {String} title: "Title"
+            * @param {Object} titleAttributes: {"itemprop": "name"}
+            * @param {String} titleTemplate: "MySite.com - %s"
+            */
+            set: function set(canUseDOM) {
+                Component.canUseDOM = canUseDOM;
+            }
+        }]);
+
+        return HelmetWrapper;
+    }(_react2.default.Component), _class.propTypes = {
+        base: _propTypes2.default.object,
+        bodyAttributes: _propTypes2.default.object,
+        children: _propTypes2.default.oneOfType([_propTypes2.default.arrayOf(_propTypes2.default.node), _propTypes2.default.node]),
+        defaultTitle: _propTypes2.default.string,
+        defer: _propTypes2.default.bool,
+        encodeSpecialCharacters: _propTypes2.default.bool,
+        htmlAttributes: _propTypes2.default.object,
+        link: _propTypes2.default.arrayOf(_propTypes2.default.object),
+        meta: _propTypes2.default.arrayOf(_propTypes2.default.object),
+        noscript: _propTypes2.default.arrayOf(_propTypes2.default.object),
+        onChangeClientState: _propTypes2.default.func,
+        script: _propTypes2.default.arrayOf(_propTypes2.default.object),
+        style: _propTypes2.default.arrayOf(_propTypes2.default.object),
+        title: _propTypes2.default.string,
+        titleAttributes: _propTypes2.default.object,
+        titleTemplate: _propTypes2.default.string
+    }, _class.defaultProps = {
+        defer: true,
+        encodeSpecialCharacters: true
+    }, _class.peek = Component.peek, _class.rewind = function () {
+        var mappedState = Component.rewind();
+        if (!mappedState) {
+            // provide fallback if mappedState is undefined
+            mappedState = (0, _HelmetUtils.mapStateOnServer)({
+                baseTag: [],
+                bodyAttributes: {},
+                encodeSpecialCharacters: true,
+                htmlAttributes: {},
+                linkTags: [],
+                metaTags: [],
+                noscriptTags: [],
+                scriptTags: [],
+                styleTags: [],
+                title: "",
+                titleAttributes: {}
+            });
+        }
+
+        return mappedState;
+    }, _temp;
+};
+
+var NullComponent = function NullComponent() {
+    return null;
+};
+
+var HelmetSideEffects = (0, _reactSideEffect2.default)(_HelmetUtils.reducePropsToState, _HelmetUtils.handleClientStateChange, _HelmetUtils.mapStateOnServer)(NullComponent);
+
+var HelmetExport = Helmet(HelmetSideEffects);
+HelmetExport.renderStatic = HelmetExport.rewind;
+
+exports.Helmet = HelmetExport;
+exports.default = HelmetExport;
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet/lib/HelmetConstants.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/react-helmet/lib/HelmetConstants.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+exports.__esModule = true;
+var ATTRIBUTE_NAMES = exports.ATTRIBUTE_NAMES = {
+    BODY: "bodyAttributes",
+    HTML: "htmlAttributes",
+    TITLE: "titleAttributes"
+};
+
+var TAG_NAMES = exports.TAG_NAMES = {
+    BASE: "base",
+    BODY: "body",
+    HEAD: "head",
+    HTML: "html",
+    LINK: "link",
+    META: "meta",
+    NOSCRIPT: "noscript",
+    SCRIPT: "script",
+    STYLE: "style",
+    TITLE: "title"
+};
+
+var VALID_TAG_NAMES = exports.VALID_TAG_NAMES = Object.keys(TAG_NAMES).map(function (name) {
+    return TAG_NAMES[name];
+});
+
+var TAG_PROPERTIES = exports.TAG_PROPERTIES = {
+    CHARSET: "charset",
+    CSS_TEXT: "cssText",
+    HREF: "href",
+    HTTPEQUIV: "http-equiv",
+    INNER_HTML: "innerHTML",
+    ITEM_PROP: "itemprop",
+    NAME: "name",
+    PROPERTY: "property",
+    REL: "rel",
+    SRC: "src"
+};
+
+var REACT_TAG_MAP = exports.REACT_TAG_MAP = {
+    accesskey: "accessKey",
+    charset: "charSet",
+    class: "className",
+    contenteditable: "contentEditable",
+    contextmenu: "contextMenu",
+    "http-equiv": "httpEquiv",
+    itemprop: "itemProp",
+    tabindex: "tabIndex"
+};
+
+var HELMET_PROPS = exports.HELMET_PROPS = {
+    DEFAULT_TITLE: "defaultTitle",
+    DEFER: "defer",
+    ENCODE_SPECIAL_CHARACTERS: "encodeSpecialCharacters",
+    ON_CHANGE_CLIENT_STATE: "onChangeClientState",
+    TITLE_TEMPLATE: "titleTemplate"
+};
+
+var HTML_TAG_MAP = exports.HTML_TAG_MAP = Object.keys(REACT_TAG_MAP).reduce(function (obj, key) {
+    obj[REACT_TAG_MAP[key]] = key;
+    return obj;
+}, {});
+
+var SELF_CLOSING_TAGS = exports.SELF_CLOSING_TAGS = [TAG_NAMES.NOSCRIPT, TAG_NAMES.SCRIPT, TAG_NAMES.STYLE];
+
+var HELMET_ATTRIBUTE = exports.HELMET_ATTRIBUTE = "data-react-helmet";
+
+/***/ }),
+
+/***/ "./node_modules/react-helmet/lib/HelmetUtils.js":
+/*!******************************************************!*\
+  !*** ./node_modules/react-helmet/lib/HelmetUtils.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {exports.__esModule = true;
+exports.warn = exports.requestAnimationFrame = exports.reducePropsToState = exports.mapStateOnServer = exports.handleClientStateChange = exports.convertReactPropstoHtmlAttributes = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _objectAssign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
+
+var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
+var _HelmetConstants = __webpack_require__(/*! ./HelmetConstants.js */ "./node_modules/react-helmet/lib/HelmetConstants.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var encodeSpecialCharacters = function encodeSpecialCharacters(str) {
+    var encode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+    if (encode === false) {
+        return String(str);
+    }
+
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
+};
+
+var getTitleFromPropsList = function getTitleFromPropsList(propsList) {
+    var innermostTitle = getInnermostProperty(propsList, _HelmetConstants.TAG_NAMES.TITLE);
+    var innermostTemplate = getInnermostProperty(propsList, _HelmetConstants.HELMET_PROPS.TITLE_TEMPLATE);
+
+    if (innermostTemplate && innermostTitle) {
+        // use function arg to avoid need to escape $ characters
+        return innermostTemplate.replace(/%s/g, function () {
+            return innermostTitle;
+        });
+    }
+
+    var innermostDefaultTitle = getInnermostProperty(propsList, _HelmetConstants.HELMET_PROPS.DEFAULT_TITLE);
+
+    return innermostTitle || innermostDefaultTitle || undefined;
+};
+
+var getOnChangeClientState = function getOnChangeClientState(propsList) {
+    return getInnermostProperty(propsList, _HelmetConstants.HELMET_PROPS.ON_CHANGE_CLIENT_STATE) || function () {};
+};
+
+var getAttributesFromPropsList = function getAttributesFromPropsList(tagType, propsList) {
+    return propsList.filter(function (props) {
+        return typeof props[tagType] !== "undefined";
+    }).map(function (props) {
+        return props[tagType];
+    }).reduce(function (tagAttrs, current) {
+        return _extends({}, tagAttrs, current);
+    }, {});
+};
+
+var getBaseTagFromPropsList = function getBaseTagFromPropsList(primaryAttributes, propsList) {
+    return propsList.filter(function (props) {
+        return typeof props[_HelmetConstants.TAG_NAMES.BASE] !== "undefined";
+    }).map(function (props) {
+        return props[_HelmetConstants.TAG_NAMES.BASE];
+    }).reverse().reduce(function (innermostBaseTag, tag) {
+        if (!innermostBaseTag.length) {
+            var keys = Object.keys(tag);
+
+            for (var i = 0; i < keys.length; i++) {
+                var attributeKey = keys[i];
+                var lowerCaseAttributeKey = attributeKey.toLowerCase();
+
+                if (primaryAttributes.indexOf(lowerCaseAttributeKey) !== -1 && tag[lowerCaseAttributeKey]) {
+                    return innermostBaseTag.concat(tag);
+                }
+            }
+        }
+
+        return innermostBaseTag;
+    }, []);
+};
+
+var getTagsFromPropsList = function getTagsFromPropsList(tagName, primaryAttributes, propsList) {
+    // Calculate list of tags, giving priority innermost component (end of the propslist)
+    var approvedSeenTags = {};
+
+    return propsList.filter(function (props) {
+        if (Array.isArray(props[tagName])) {
+            return true;
+        }
+        if (typeof props[tagName] !== "undefined") {
+            warn("Helmet: " + tagName + " should be of type \"Array\". Instead found type \"" + _typeof(props[tagName]) + "\"");
+        }
+        return false;
+    }).map(function (props) {
+        return props[tagName];
+    }).reverse().reduce(function (approvedTags, instanceTags) {
+        var instanceSeenTags = {};
+
+        instanceTags.filter(function (tag) {
+            var primaryAttributeKey = void 0;
+            var keys = Object.keys(tag);
+            for (var i = 0; i < keys.length; i++) {
+                var attributeKey = keys[i];
+                var lowerCaseAttributeKey = attributeKey.toLowerCase();
+
+                // Special rule with link tags, since rel and href are both primary tags, rel takes priority
+                if (primaryAttributes.indexOf(lowerCaseAttributeKey) !== -1 && !(primaryAttributeKey === _HelmetConstants.TAG_PROPERTIES.REL && tag[primaryAttributeKey].toLowerCase() === "canonical") && !(lowerCaseAttributeKey === _HelmetConstants.TAG_PROPERTIES.REL && tag[lowerCaseAttributeKey].toLowerCase() === "stylesheet")) {
+                    primaryAttributeKey = lowerCaseAttributeKey;
+                }
+                // Special case for innerHTML which doesn't work lowercased
+                if (primaryAttributes.indexOf(attributeKey) !== -1 && (attributeKey === _HelmetConstants.TAG_PROPERTIES.INNER_HTML || attributeKey === _HelmetConstants.TAG_PROPERTIES.CSS_TEXT || attributeKey === _HelmetConstants.TAG_PROPERTIES.ITEM_PROP)) {
+                    primaryAttributeKey = attributeKey;
+                }
+            }
+
+            if (!primaryAttributeKey || !tag[primaryAttributeKey]) {
+                return false;
+            }
+
+            var value = tag[primaryAttributeKey].toLowerCase();
+
+            if (!approvedSeenTags[primaryAttributeKey]) {
+                approvedSeenTags[primaryAttributeKey] = {};
+            }
+
+            if (!instanceSeenTags[primaryAttributeKey]) {
+                instanceSeenTags[primaryAttributeKey] = {};
+            }
+
+            if (!approvedSeenTags[primaryAttributeKey][value]) {
+                instanceSeenTags[primaryAttributeKey][value] = true;
+                return true;
+            }
+
+            return false;
+        }).reverse().forEach(function (tag) {
+            return approvedTags.push(tag);
+        });
+
+        // Update seen tags with tags from this instance
+        var keys = Object.keys(instanceSeenTags);
+        for (var i = 0; i < keys.length; i++) {
+            var attributeKey = keys[i];
+            var tagUnion = (0, _objectAssign2.default)({}, approvedSeenTags[attributeKey], instanceSeenTags[attributeKey]);
+
+            approvedSeenTags[attributeKey] = tagUnion;
+        }
+
+        return approvedTags;
+    }, []).reverse();
+};
+
+var getInnermostProperty = function getInnermostProperty(propsList, property) {
+    for (var i = propsList.length - 1; i >= 0; i--) {
+        var props = propsList[i];
+
+        if (props.hasOwnProperty(property)) {
+            return props[property];
+        }
+    }
+
+    return null;
+};
+
+var reducePropsToState = function reducePropsToState(propsList) {
+    return {
+        baseTag: getBaseTagFromPropsList([_HelmetConstants.TAG_PROPERTIES.HREF], propsList),
+        bodyAttributes: getAttributesFromPropsList(_HelmetConstants.ATTRIBUTE_NAMES.BODY, propsList),
+        defer: getInnermostProperty(propsList, _HelmetConstants.HELMET_PROPS.DEFER),
+        encode: getInnermostProperty(propsList, _HelmetConstants.HELMET_PROPS.ENCODE_SPECIAL_CHARACTERS),
+        htmlAttributes: getAttributesFromPropsList(_HelmetConstants.ATTRIBUTE_NAMES.HTML, propsList),
+        linkTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.LINK, [_HelmetConstants.TAG_PROPERTIES.REL, _HelmetConstants.TAG_PROPERTIES.HREF], propsList),
+        metaTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.META, [_HelmetConstants.TAG_PROPERTIES.NAME, _HelmetConstants.TAG_PROPERTIES.CHARSET, _HelmetConstants.TAG_PROPERTIES.HTTPEQUIV, _HelmetConstants.TAG_PROPERTIES.PROPERTY, _HelmetConstants.TAG_PROPERTIES.ITEM_PROP], propsList),
+        noscriptTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.NOSCRIPT, [_HelmetConstants.TAG_PROPERTIES.INNER_HTML], propsList),
+        onChangeClientState: getOnChangeClientState(propsList),
+        scriptTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.SCRIPT, [_HelmetConstants.TAG_PROPERTIES.SRC, _HelmetConstants.TAG_PROPERTIES.INNER_HTML], propsList),
+        styleTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.STYLE, [_HelmetConstants.TAG_PROPERTIES.CSS_TEXT], propsList),
+        title: getTitleFromPropsList(propsList),
+        titleAttributes: getAttributesFromPropsList(_HelmetConstants.ATTRIBUTE_NAMES.TITLE, propsList)
+    };
+};
+
+var rafPolyfill = function () {
+    var clock = Date.now();
+
+    return function (callback) {
+        var currentTime = Date.now();
+
+        if (currentTime - clock > 16) {
+            clock = currentTime;
+            callback(currentTime);
+        } else {
+            setTimeout(function () {
+                rafPolyfill(callback);
+            }, 0);
+        }
+    };
+}();
+
+var cafPolyfill = function cafPolyfill(id) {
+    return clearTimeout(id);
+};
+
+var requestAnimationFrame = typeof window !== "undefined" ? window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || rafPolyfill : global.requestAnimationFrame || rafPolyfill;
+
+var cancelAnimationFrame = typeof window !== "undefined" ? window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || cafPolyfill : global.cancelAnimationFrame || cafPolyfill;
+
+var warn = function warn(msg) {
+    return console && typeof console.warn === "function" && console.warn(msg);
+};
+
+var _helmetCallback = null;
+
+var handleClientStateChange = function handleClientStateChange(newState) {
+    if (_helmetCallback) {
+        cancelAnimationFrame(_helmetCallback);
+    }
+
+    if (newState.defer) {
+        _helmetCallback = requestAnimationFrame(function () {
+            commitTagChanges(newState, function () {
+                _helmetCallback = null;
+            });
+        });
+    } else {
+        commitTagChanges(newState);
+        _helmetCallback = null;
+    }
+};
+
+var commitTagChanges = function commitTagChanges(newState, cb) {
+    var baseTag = newState.baseTag,
+        bodyAttributes = newState.bodyAttributes,
+        htmlAttributes = newState.htmlAttributes,
+        linkTags = newState.linkTags,
+        metaTags = newState.metaTags,
+        noscriptTags = newState.noscriptTags,
+        onChangeClientState = newState.onChangeClientState,
+        scriptTags = newState.scriptTags,
+        styleTags = newState.styleTags,
+        title = newState.title,
+        titleAttributes = newState.titleAttributes;
+
+    updateAttributes(_HelmetConstants.TAG_NAMES.BODY, bodyAttributes);
+    updateAttributes(_HelmetConstants.TAG_NAMES.HTML, htmlAttributes);
+
+    updateTitle(title, titleAttributes);
+
+    var tagUpdates = {
+        baseTag: updateTags(_HelmetConstants.TAG_NAMES.BASE, baseTag),
+        linkTags: updateTags(_HelmetConstants.TAG_NAMES.LINK, linkTags),
+        metaTags: updateTags(_HelmetConstants.TAG_NAMES.META, metaTags),
+        noscriptTags: updateTags(_HelmetConstants.TAG_NAMES.NOSCRIPT, noscriptTags),
+        scriptTags: updateTags(_HelmetConstants.TAG_NAMES.SCRIPT, scriptTags),
+        styleTags: updateTags(_HelmetConstants.TAG_NAMES.STYLE, styleTags)
+    };
+
+    var addedTags = {};
+    var removedTags = {};
+
+    Object.keys(tagUpdates).forEach(function (tagType) {
+        var _tagUpdates$tagType = tagUpdates[tagType],
+            newTags = _tagUpdates$tagType.newTags,
+            oldTags = _tagUpdates$tagType.oldTags;
+
+
+        if (newTags.length) {
+            addedTags[tagType] = newTags;
+        }
+        if (oldTags.length) {
+            removedTags[tagType] = tagUpdates[tagType].oldTags;
+        }
+    });
+
+    cb && cb();
+
+    onChangeClientState(newState, addedTags, removedTags);
+};
+
+var flattenArray = function flattenArray(possibleArray) {
+    return Array.isArray(possibleArray) ? possibleArray.join("") : possibleArray;
+};
+
+var updateTitle = function updateTitle(title, attributes) {
+    if (typeof title !== "undefined" && document.title !== title) {
+        document.title = flattenArray(title);
+    }
+
+    updateAttributes(_HelmetConstants.TAG_NAMES.TITLE, attributes);
+};
+
+var updateAttributes = function updateAttributes(tagName, attributes) {
+    var elementTag = document.getElementsByTagName(tagName)[0];
+
+    if (!elementTag) {
+        return;
+    }
+
+    var helmetAttributeString = elementTag.getAttribute(_HelmetConstants.HELMET_ATTRIBUTE);
+    var helmetAttributes = helmetAttributeString ? helmetAttributeString.split(",") : [];
+    var attributesToRemove = [].concat(helmetAttributes);
+    var attributeKeys = Object.keys(attributes);
+
+    for (var i = 0; i < attributeKeys.length; i++) {
+        var attribute = attributeKeys[i];
+        var value = attributes[attribute] || "";
+
+        if (elementTag.getAttribute(attribute) !== value) {
+            elementTag.setAttribute(attribute, value);
+        }
+
+        if (helmetAttributes.indexOf(attribute) === -1) {
+            helmetAttributes.push(attribute);
+        }
+
+        var indexToSave = attributesToRemove.indexOf(attribute);
+        if (indexToSave !== -1) {
+            attributesToRemove.splice(indexToSave, 1);
+        }
+    }
+
+    for (var _i = attributesToRemove.length - 1; _i >= 0; _i--) {
+        elementTag.removeAttribute(attributesToRemove[_i]);
+    }
+
+    if (helmetAttributes.length === attributesToRemove.length) {
+        elementTag.removeAttribute(_HelmetConstants.HELMET_ATTRIBUTE);
+    } else if (elementTag.getAttribute(_HelmetConstants.HELMET_ATTRIBUTE) !== attributeKeys.join(",")) {
+        elementTag.setAttribute(_HelmetConstants.HELMET_ATTRIBUTE, attributeKeys.join(","));
+    }
+};
+
+var updateTags = function updateTags(type, tags) {
+    var headElement = document.head || document.querySelector(_HelmetConstants.TAG_NAMES.HEAD);
+    var tagNodes = headElement.querySelectorAll(type + "[" + _HelmetConstants.HELMET_ATTRIBUTE + "]");
+    var oldTags = Array.prototype.slice.call(tagNodes);
+    var newTags = [];
+    var indexToDelete = void 0;
+
+    if (tags && tags.length) {
+        tags.forEach(function (tag) {
+            var newElement = document.createElement(type);
+
+            for (var attribute in tag) {
+                if (tag.hasOwnProperty(attribute)) {
+                    if (attribute === _HelmetConstants.TAG_PROPERTIES.INNER_HTML) {
+                        newElement.innerHTML = tag.innerHTML;
+                    } else if (attribute === _HelmetConstants.TAG_PROPERTIES.CSS_TEXT) {
+                        if (newElement.styleSheet) {
+                            newElement.styleSheet.cssText = tag.cssText;
+                        } else {
+                            newElement.appendChild(document.createTextNode(tag.cssText));
+                        }
+                    } else {
+                        var value = typeof tag[attribute] === "undefined" ? "" : tag[attribute];
+                        newElement.setAttribute(attribute, value);
+                    }
+                }
+            }
+
+            newElement.setAttribute(_HelmetConstants.HELMET_ATTRIBUTE, "true");
+
+            // Remove a duplicate tag from domTagstoRemove, so it isn't cleared.
+            if (oldTags.some(function (existingTag, index) {
+                indexToDelete = index;
+                return newElement.isEqualNode(existingTag);
+            })) {
+                oldTags.splice(indexToDelete, 1);
+            } else {
+                newTags.push(newElement);
+            }
+        });
+    }
+
+    oldTags.forEach(function (tag) {
+        return tag.parentNode.removeChild(tag);
+    });
+    newTags.forEach(function (tag) {
+        return headElement.appendChild(tag);
+    });
+
+    return {
+        oldTags: oldTags,
+        newTags: newTags
+    };
+};
+
+var generateElementAttributesAsString = function generateElementAttributesAsString(attributes) {
+    return Object.keys(attributes).reduce(function (str, key) {
+        var attr = typeof attributes[key] !== "undefined" ? key + "=\"" + attributes[key] + "\"" : "" + key;
+        return str ? str + " " + attr : attr;
+    }, "");
+};
+
+var generateTitleAsString = function generateTitleAsString(type, title, attributes, encode) {
+    var attributeString = generateElementAttributesAsString(attributes);
+    var flattenedTitle = flattenArray(title);
+    return attributeString ? "<" + type + " " + _HelmetConstants.HELMET_ATTRIBUTE + "=\"true\" " + attributeString + ">" + encodeSpecialCharacters(flattenedTitle, encode) + "</" + type + ">" : "<" + type + " " + _HelmetConstants.HELMET_ATTRIBUTE + "=\"true\">" + encodeSpecialCharacters(flattenedTitle, encode) + "</" + type + ">";
+};
+
+var generateTagsAsString = function generateTagsAsString(type, tags, encode) {
+    return tags.reduce(function (str, tag) {
+        var attributeHtml = Object.keys(tag).filter(function (attribute) {
+            return !(attribute === _HelmetConstants.TAG_PROPERTIES.INNER_HTML || attribute === _HelmetConstants.TAG_PROPERTIES.CSS_TEXT);
+        }).reduce(function (string, attribute) {
+            var attr = typeof tag[attribute] === "undefined" ? attribute : attribute + "=\"" + encodeSpecialCharacters(tag[attribute], encode) + "\"";
+            return string ? string + " " + attr : attr;
+        }, "");
+
+        var tagContent = tag.innerHTML || tag.cssText || "";
+
+        var isSelfClosing = _HelmetConstants.SELF_CLOSING_TAGS.indexOf(type) === -1;
+
+        return str + "<" + type + " " + _HelmetConstants.HELMET_ATTRIBUTE + "=\"true\" " + attributeHtml + (isSelfClosing ? "/>" : ">" + tagContent + "</" + type + ">");
+    }, "");
+};
+
+var convertElementAttributestoReactProps = function convertElementAttributestoReactProps(attributes) {
+    var initProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    return Object.keys(attributes).reduce(function (obj, key) {
+        obj[_HelmetConstants.REACT_TAG_MAP[key] || key] = attributes[key];
+        return obj;
+    }, initProps);
+};
+
+var convertReactPropstoHtmlAttributes = function convertReactPropstoHtmlAttributes(props) {
+    var initAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    return Object.keys(props).reduce(function (obj, key) {
+        obj[_HelmetConstants.HTML_TAG_MAP[key] || key] = props[key];
+        return obj;
+    }, initAttributes);
+};
+
+var generateTitleAsReactComponent = function generateTitleAsReactComponent(type, title, attributes) {
+    var _initProps;
+
+    // assigning into an array to define toString function on it
+    var initProps = (_initProps = {
+        key: title
+    }, _initProps[_HelmetConstants.HELMET_ATTRIBUTE] = true, _initProps);
+    var props = convertElementAttributestoReactProps(attributes, initProps);
+
+    return [_react2.default.createElement(_HelmetConstants.TAG_NAMES.TITLE, props, title)];
+};
+
+var generateTagsAsReactComponent = function generateTagsAsReactComponent(type, tags) {
+    return tags.map(function (tag, i) {
+        var _mappedTag;
+
+        var mappedTag = (_mappedTag = {
+            key: i
+        }, _mappedTag[_HelmetConstants.HELMET_ATTRIBUTE] = true, _mappedTag);
+
+        Object.keys(tag).forEach(function (attribute) {
+            var mappedAttribute = _HelmetConstants.REACT_TAG_MAP[attribute] || attribute;
+
+            if (mappedAttribute === _HelmetConstants.TAG_PROPERTIES.INNER_HTML || mappedAttribute === _HelmetConstants.TAG_PROPERTIES.CSS_TEXT) {
+                var content = tag.innerHTML || tag.cssText;
+                mappedTag.dangerouslySetInnerHTML = { __html: content };
+            } else {
+                mappedTag[mappedAttribute] = tag[attribute];
+            }
+        });
+
+        return _react2.default.createElement(type, mappedTag);
+    });
+};
+
+var getMethodsForTag = function getMethodsForTag(type, tags, encode) {
+    switch (type) {
+        case _HelmetConstants.TAG_NAMES.TITLE:
+            return {
+                toComponent: function toComponent() {
+                    return generateTitleAsReactComponent(type, tags.title, tags.titleAttributes, encode);
+                },
+                toString: function toString() {
+                    return generateTitleAsString(type, tags.title, tags.titleAttributes, encode);
+                }
+            };
+        case _HelmetConstants.ATTRIBUTE_NAMES.BODY:
+        case _HelmetConstants.ATTRIBUTE_NAMES.HTML:
+            return {
+                toComponent: function toComponent() {
+                    return convertElementAttributestoReactProps(tags);
+                },
+                toString: function toString() {
+                    return generateElementAttributesAsString(tags);
+                }
+            };
+        default:
+            return {
+                toComponent: function toComponent() {
+                    return generateTagsAsReactComponent(type, tags);
+                },
+                toString: function toString() {
+                    return generateTagsAsString(type, tags, encode);
+                }
+            };
+    }
+};
+
+var mapStateOnServer = function mapStateOnServer(_ref) {
+    var baseTag = _ref.baseTag,
+        bodyAttributes = _ref.bodyAttributes,
+        encode = _ref.encode,
+        htmlAttributes = _ref.htmlAttributes,
+        linkTags = _ref.linkTags,
+        metaTags = _ref.metaTags,
+        noscriptTags = _ref.noscriptTags,
+        scriptTags = _ref.scriptTags,
+        styleTags = _ref.styleTags,
+        _ref$title = _ref.title,
+        title = _ref$title === undefined ? "" : _ref$title,
+        titleAttributes = _ref.titleAttributes;
+    return {
+        base: getMethodsForTag(_HelmetConstants.TAG_NAMES.BASE, baseTag, encode),
+        bodyAttributes: getMethodsForTag(_HelmetConstants.ATTRIBUTE_NAMES.BODY, bodyAttributes, encode),
+        htmlAttributes: getMethodsForTag(_HelmetConstants.ATTRIBUTE_NAMES.HTML, htmlAttributes, encode),
+        link: getMethodsForTag(_HelmetConstants.TAG_NAMES.LINK, linkTags, encode),
+        meta: getMethodsForTag(_HelmetConstants.TAG_NAMES.META, metaTags, encode),
+        noscript: getMethodsForTag(_HelmetConstants.TAG_NAMES.NOSCRIPT, noscriptTags, encode),
+        script: getMethodsForTag(_HelmetConstants.TAG_NAMES.SCRIPT, scriptTags, encode),
+        style: getMethodsForTag(_HelmetConstants.TAG_NAMES.STYLE, styleTags, encode),
+        title: getMethodsForTag(_HelmetConstants.TAG_NAMES.TITLE, { title: title, titleAttributes: titleAttributes }, encode)
+    };
+};
+
+exports.convertReactPropstoHtmlAttributes = convertReactPropstoHtmlAttributes;
+exports.handleClientStateChange = handleClientStateChange;
+exports.mapStateOnServer = mapStateOnServer;
+exports.reducePropsToState = reducePropsToState;
+exports.requestAnimationFrame = requestAnimationFrame;
+exports.warn = warn;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
 /***/ "./node_modules/react-is/cjs/react-is.development.js":
 /*!***********************************************************!*\
   !*** ./node_modules/react-is/cjs/react-is.development.js ***!
@@ -29032,6 +31502,131 @@ if (__DEV__) {
 }
 
 module.exports = warning;
+
+
+/***/ }),
+
+/***/ "./node_modules/react-side-effect/lib/index.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/react-side-effect/lib/index.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+var React__default = _interopDefault(React);
+var ExecutionEnvironment = _interopDefault(__webpack_require__(/*! exenv */ "./node_modules/exenv/index.js"));
+var shallowEqual = _interopDefault(__webpack_require__(/*! shallowequal */ "./node_modules/shallowequal/index.js"));
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function withSideEffect(reducePropsToState, handleStateChangeOnClient, mapStateOnServer) {
+  if (typeof reducePropsToState !== 'function') {
+    throw new Error('Expected reducePropsToState to be a function.');
+  }
+  if (typeof handleStateChangeOnClient !== 'function') {
+    throw new Error('Expected handleStateChangeOnClient to be a function.');
+  }
+  if (typeof mapStateOnServer !== 'undefined' && typeof mapStateOnServer !== 'function') {
+    throw new Error('Expected mapStateOnServer to either be undefined or a function.');
+  }
+
+  function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  }
+
+  return function wrap(WrappedComponent) {
+    if (typeof WrappedComponent !== 'function') {
+      throw new Error('Expected WrappedComponent to be a React component.');
+    }
+
+    var mountedInstances = [];
+    var state = void 0;
+
+    function emitChange() {
+      state = reducePropsToState(mountedInstances.map(function (instance) {
+        return instance.props;
+      }));
+
+      if (SideEffect.canUseDOM) {
+        handleStateChangeOnClient(state);
+      } else if (mapStateOnServer) {
+        state = mapStateOnServer(state);
+      }
+    }
+
+    var SideEffect = function (_Component) {
+      _inherits(SideEffect, _Component);
+
+      function SideEffect() {
+        _classCallCheck(this, SideEffect);
+
+        return _possibleConstructorReturn(this, _Component.apply(this, arguments));
+      }
+
+      // Try to use displayName of wrapped component
+      SideEffect.peek = function peek() {
+        return state;
+      };
+
+      // Expose canUseDOM so tests can monkeypatch it
+
+
+      SideEffect.rewind = function rewind() {
+        if (SideEffect.canUseDOM) {
+          throw new Error('You may only call rewind() on the server. Call peek() to read the current state.');
+        }
+
+        var recordedState = state;
+        state = undefined;
+        mountedInstances = [];
+        return recordedState;
+      };
+
+      SideEffect.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
+        return !shallowEqual(nextProps, this.props);
+      };
+
+      SideEffect.prototype.componentWillMount = function componentWillMount() {
+        mountedInstances.push(this);
+        emitChange();
+      };
+
+      SideEffect.prototype.componentDidUpdate = function componentDidUpdate() {
+        emitChange();
+      };
+
+      SideEffect.prototype.componentWillUnmount = function componentWillUnmount() {
+        var index = mountedInstances.indexOf(this);
+        mountedInstances.splice(index, 1);
+        emitChange();
+      };
+
+      SideEffect.prototype.render = function render() {
+        return React__default.createElement(WrappedComponent, this.props);
+      };
+
+      return SideEffect;
+    }(React.Component);
+
+    SideEffect.displayName = 'SideEffect(' + getDisplayName(WrappedComponent) + ')';
+    SideEffect.canUseDOM = ExecutionEnvironment.canUseDOM;
+
+
+    return SideEffect;
+  };
+}
+
+module.exports = withSideEffect;
 
 
 /***/ }),
@@ -39316,6 +41911,63 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/shallowequal/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/shallowequal/index.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+//
+
+module.exports = function shallowEqual(objA, objB, compare, compareContext) {
+  var ret = compare ? compare.call(compareContext, objA, objB) : void 0;
+
+  if (ret !== void 0) {
+    return !!ret;
+  }
+
+  if (objA === objB) {
+    return true;
+  }
+
+  if (typeof objA !== "object" || !objA || typeof objB !== "object" || !objB) {
+    return false;
+  }
+
+  var keysA = Object.keys(objA);
+  var keysB = Object.keys(objB);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
+
+  // Test for A's keys different from B.
+  for (var idx = 0; idx < keysA.length; idx++) {
+    var key = keysA[idx];
+
+    if (!bHasOwnProperty(key)) {
+      return false;
+    }
+
+    var valueA = objA[key];
+    var valueB = objB[key];
+
+    ret = compare ? compare.call(compareContext, valueA, valueB, key) : void 0;
+
+    if (ret === false || (ret === void 0 && valueA !== valueB)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/symbol-observable/es/index.js":
 /*!****************************************************!*\
   !*** ./node_modules/symbol-observable/es/index.js ***!
@@ -39517,9 +42169,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterConfig = __webpack_require__(/*! react-router-config */ "./node_modules/react-router-config/es/index.js");
 
-var _GlobalHeader = __webpack_require__(/*! ./GlobalHeader.jsx */ "./theme/components/GlobalHeader.jsx");
+var _reactHelmetAsync = __webpack_require__(/*! react-helmet-async */ "./node_modules/react-helmet-async/lib/index.js");
 
-var _GlobalHeader2 = _interopRequireDefault(_GlobalHeader);
+var _reactHelmetAsync2 = _interopRequireDefault(_reactHelmetAsync);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39532,8 +42184,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // COMPONENTS
 
 
+// import Head from './Head.jsx';
+
 /*
   the app is a global container; the first component in the chain our app renders.
+  thus, any layout here will appear everywhere.
 */
 
 // THEME
@@ -39559,8 +42214,20 @@ var App = function (_React$Component) {
       return _react2.default.createElement(
         _react2.default.Fragment,
         null,
-        _react2.default.createElement(_GlobalHeader2.default, null),
-        (0, _reactRouterConfig.renderRoutes)(this.props.route.routes)
+        _react2.default.createElement(
+          _reactHelmetAsync.HelmetProvider,
+          { context: {} },
+          _react2.default.createElement(
+            _reactHelmetAsync2.default,
+            null,
+            _react2.default.createElement(
+              'title',
+              null,
+              'This is a title'
+            )
+          ),
+          (0, _reactRouterConfig.renderRoutes)(this.props.route.routes)
+        )
       );
     }
   }]);
@@ -39588,6 +42255,14 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+// THEME
+
+
+// COMPONENTS
+
+
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
@@ -39608,16 +42283,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// THEME
-
-
-// COMPONENTS
-
-
 function mapStateToProps(state) {
-  return {
-    pages: state.pages
-  };
+  return _extends({}, state);
 }
 
 var Navigation = function (_Component) {
@@ -39632,6 +42299,8 @@ var Navigation = function (_Component) {
     _this.state = {
       isOpen: false
     };
+
+    console.log(_this);
     return _this;
   }
 
@@ -39646,55 +42315,42 @@ var Navigation = function (_Component) {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        _reactstrap.Container,
+        'header',
         null,
         _react2.default.createElement(
-          _reactstrap.Row,
-          null,
+          _reactstrap.Navbar,
+          { light: true, expand: 'md' },
           _react2.default.createElement(
-            _reactstrap.Col,
-            { sm: 12 },
+            _reactstrap.NavbarBrand,
+            { href: '/' },
+            'reactstrap'
+          ),
+          _react2.default.createElement(_reactstrap.NavbarToggler, { onClick: this.toggle }),
+          _react2.default.createElement(
+            _reactstrap.Collapse,
+            { isOpen: this.state.isOpen, navbar: true },
             _react2.default.createElement(
-              'header',
-              null,
+              _reactstrap.Nav,
+              { className: 'ml-auto', navbar: true },
               _react2.default.createElement(
-                _reactstrap.Navbar,
-                { light: true, expand: 'md' },
+                _reactstrap.NavItem,
+                null,
                 _react2.default.createElement(
-                  _reactstrap.NavbarBrand,
-                  { href: '/' },
-                  'reactstrap'
-                ),
-                _react2.default.createElement(_reactstrap.NavbarToggler, { onClick: this.toggle }),
+                  _reactstrap.NavLink,
+                  { href: '/components/' },
+                  'Components'
+                )
+              ),
+              _react2.default.createElement(
+                _reactstrap.NavItem,
+                null,
                 _react2.default.createElement(
-                  _reactstrap.Collapse,
-                  { isOpen: this.state.isOpen, navbar: true },
-                  _react2.default.createElement(
-                    _reactstrap.Nav,
-                    { className: 'ml-auto', navbar: true },
-                    _react2.default.createElement(
-                      _reactstrap.NavItem,
-                      null,
-                      _react2.default.createElement(
-                        _reactstrap.NavLink,
-                        { href: '/components/' },
-                        'Components'
-                      )
-                    ),
-                    _react2.default.createElement(
-                      _reactstrap.NavItem,
-                      null,
-                      _react2.default.createElement(
-                        _reactstrap.NavLink,
-                        { href: 'https://github.com/reactstrap/reactstrap' },
-                        'GitHub'
-                      )
-                    )
-                  )
+                  _reactstrap.NavLink,
+                  { href: 'https://github.com/reactstrap/reactstrap' },
+                  'GitHub'
                 )
               )
-            ),
-            _react2.default.createElement('hr', null)
+            )
           )
         )
       );
@@ -39707,6 +42363,65 @@ var Navigation = function (_Component) {
 ;
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps)(Navigation);
+
+/***/ }),
+
+/***/ "./theme/components/Head.jsx":
+/*!***********************************!*\
+  !*** ./theme/components/Head.jsx ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactHelmet = __webpack_require__(/*! react-helmet */ "./node_modules/react-helmet/lib/Helmet.js");
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Head = function (_Component) {
+  _inherits(Head, _Component);
+
+  function Head() {
+    _classCallCheck(this, Head);
+
+    return _possibleConstructorReturn(this, (Head.__proto__ || Object.getPrototypeOf(Head)).apply(this, arguments));
+  }
+
+  _createClass(Head, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(_reactHelmet.Helmet, { title: 'This is a title' })
+      );
+    }
+  }]);
+
+  return Head;
+}(_react.Component);
+
+exports.default = Head;
 
 /***/ }),
 
@@ -39739,6 +42454,14 @@ var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-r
 
 var _reactstrap = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/dist/reactstrap.es.js");
 
+var _Head = __webpack_require__(/*! ../Head.jsx */ "./theme/components/Head.jsx");
+
+var _Head2 = _interopRequireDefault(_Head);
+
+var _GlobalHeader = __webpack_require__(/*! ../GlobalHeader.jsx */ "./theme/components/GlobalHeader.jsx");
+
+var _GlobalHeader2 = _interopRequireDefault(_GlobalHeader);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -39748,39 +42471,53 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function mapStateToProps(state) {
-  console.log(state);
-
-  return _extends({}, state.pages);
+  return _extends({}, state);
 }
 
 var Index = function (_React$Component) {
   _inherits(Index, _React$Component);
 
-  function Index() {
+  function Index(props) {
     _classCallCheck(this, Index);
 
-    return _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).call(this, props));
   }
 
   _createClass(Index, [{
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        _reactstrap.Container,
+        _react2.default.Fragment,
         null,
+        _react2.default.createElement(_Head2.default, null),
+        'This is index2',
         _react2.default.createElement(
-          _reactstrap.Row,
+          _reactstrap.Container,
           null,
           _react2.default.createElement(
-            _reactstrap.Col,
-            { sm: 12 },
+            _reactstrap.Row,
+            null,
             _react2.default.createElement(
-              'div',
-              { id: 'index' },
+              _reactstrap.Col,
+              { sm: 12 },
+              _react2.default.createElement(_GlobalHeader2.default, this.props)
+            )
+          ),
+          _react2.default.createElement('hr', null),
+          _react2.default.createElement(
+            _reactstrap.Row,
+            null,
+            _react2.default.createElement(
+              _reactstrap.Col,
+              { sm: 12 },
               _react2.default.createElement(
-                'h1',
-                null,
-                'This is index'
+                'div',
+                { id: 'index' },
+                _react2.default.createElement(
+                  'h1',
+                  null,
+                  'This is index'
+                )
               )
             )
           )

@@ -1,5 +1,4 @@
 const keystone = require('keystone');
-const calcite = require('./theme/index');
 
 keystone.init({
   'cookie secret': 'bl#rg!',
@@ -11,6 +10,5 @@ keystone.init({
 
 keystone.import('models');
 keystone.set('routes', require('./routes'));
-
 
 keystone.start();

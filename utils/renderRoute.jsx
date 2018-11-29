@@ -1,11 +1,15 @@
 import React from 'react';
-import {renderToString} from 'react-dom/server';
+import { renderToString } from 'react-dom/server';
 import { Provider } from 'react-redux';
 import StaticRouter from 'react-router-dom/StaticRouter';
 import { matchRoutes, renderRoutes } from 'react-router-config';
 
+import Helmet, { HelmetProvider } from 'react-helmet-async';
+
 import generateStore from './generateStore.js';
 import rootReducer from '../theme/reducers/root';
+
+import Head from '../theme/components/Head.jsx';
 
 const renderRoute = function(routes, url, state, res) {
   /*
@@ -23,16 +27,19 @@ const renderRoute = function(routes, url, state, res) {
   });
 
   return Promise.all(promises).then(function(data) {
+    console.log('data', data);
     const context = {};
-    const content = renderToString(
+
+    const string = renderToString(
       <Provider store={store}>
-        <StaticRouter location={url} context={context}>
-          {renderRoutes(routes)}
+        <StaticRouter location={url} context={context}>          
+            {renderRoutes(routes)}
         </StaticRouter>
       </Provider>
     );
 
-    return content;
+
+    return string;
   })
 };
 

@@ -8,18 +8,32 @@ import {
   Row
 } from 'reactstrap';
 
-function mapStateToProps(state) {
-  console.log(state);
+import Head from '../Head.jsx';
+import GlobalHeader from '../GlobalHeader.jsx';
 
+
+function mapStateToProps(state) {
   return {
-    ...state.pages
+    ...state
   };
 }
 
 class Index extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return(
+      <React.Fragment>
+      <Head/>
+      This is index2
       <Container>
+        <Row>
+          <Col sm={12}>
+            <GlobalHeader {...this.props}/>
+          </Col>
+        </Row>
+        <hr/>
         <Row>
           <Col sm={12}>
 
@@ -30,6 +44,7 @@ class Index extends React.Component {
           </Col>
         </Row>
       </Container>
+      </React.Fragment>
     )
   }
 }

@@ -25,7 +25,7 @@ import {
 
 function mapStateToProps(state) {
   return {
-    pages: state.pages
+    ...state
   };
 }
 
@@ -36,6 +36,8 @@ class Navigation extends Component {
     this.state = {
       isOpen: false
     };
+
+    console.log(this);
   }
 
   toggle() {
@@ -46,32 +48,22 @@ class Navigation extends Component {
 
   render() {
     return (
-      <Container>
-        <Row>
-          <Col sm={12}>
-
-            <header>
-              <Navbar light expand="md">
-                <NavbarBrand href="/">reactstrap</NavbarBrand>
-                <NavbarToggler onClick={this.toggle} />
-                <Collapse isOpen={this.state.isOpen} navbar>
-                  <Nav className="ml-auto" navbar>
-                    <NavItem>
-                      <NavLink href="/components/">Components</NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-                    </NavItem>
-                  </Nav>
-                </Collapse>
-              </Navbar>
-            </header>
-
-            <hr/>
-
-          </Col>
-        </Row>
-      </Container>
+      <header>
+        <Navbar light expand="md">
+          <NavbarBrand href="/">reactstrap</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink href="/components/">Components</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
+              </NavItem>
+            </Nav>
+          </Collapse>
+        </Navbar>
+      </header>
     );
   }
 };

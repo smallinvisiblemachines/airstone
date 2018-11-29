@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel-node keystone.js",
+    "start": "babel-node server.js",
     "watch": "webpack --progress --watch"
   },
   "author": "knaut",
@@ -24,6 +24,8 @@
     "pug": "^2.0.3",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
+    "react-helmet": "^5.2.0",
+    "react-helmet-async": "^0.2.0",
     "react-redux": "^5.0.5",
     "react-router": "^4.2.0",
     "react-router-config": "^1.0.0-beta.4",
