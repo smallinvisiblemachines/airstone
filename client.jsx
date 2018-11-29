@@ -1,6 +1,6 @@
 // IMPORTS
 import React from 'react';
-import { render } from 'react-dom';
+import { hydrate } from 'react-dom';
 import { Provider } from 'react-redux';
 import BrowserRouter from 'react-router-dom/BrowserRouter';
 import { renderRoutes } from 'react-router-config';
@@ -12,7 +12,6 @@ import promise from 'redux-promise-middleware';
 // THEME
 import theme from './theme/index';
 import rootReducer from './theme/reducers/root';
-import Head from './theme/components/Head.jsx';
 
 // UTILS
 import generateStore from './utils/generateStore.js';
@@ -42,16 +41,13 @@ const Client = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <React.Fragment>
-          <Head/>
-          { renderRoutes(routes) }
-        </React.Fragment>
+        { renderRoutes(routes) }
       </BrowserRouter>
     </Provider>
   );
 };
 
-render(
+hydrate(
   <Client />,
   document.getElementById('root')
 );

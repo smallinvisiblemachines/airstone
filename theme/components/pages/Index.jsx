@@ -8,7 +8,6 @@ import {
   Row
 } from 'reactstrap';
 
-import Head from '../Head.jsx';
 import GlobalHeader from '../GlobalHeader.jsx';
 
 
@@ -24,9 +23,6 @@ class Index extends React.Component {
   }
   render() {
     return(
-      <React.Fragment>
-      <Head/>
-      This is index2
       <Container>
         <Row>
           <Col sm={12}>
@@ -44,7 +40,6 @@ class Index extends React.Component {
           </Col>
         </Row>
       </Container>
-      </React.Fragment>
     )
   }
 }

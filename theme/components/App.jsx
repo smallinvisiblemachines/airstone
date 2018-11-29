@@ -2,7 +2,7 @@ import React from 'react';
 import { renderRoutes } from 'react-router-config';
 
 // COMPONENTS
-import Helmet, { HelmetProvider } from 'react-helmet-async';
+import Helmet from 'react-helmet';
 // import Head from './Head.jsx';
 
 /*
@@ -21,12 +21,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <HelmetProvider context={{}}>
-          <Helmet>
-            <title>This is a title</title>
-          </Helmet>
-          { renderRoutes( this.props.route.routes ) }
-        </HelmetProvider>
+        { renderRoutes( this.props.route.routes ) }
       </React.Fragment>
     );
   }

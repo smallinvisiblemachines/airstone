@@ -20,13 +20,13 @@ async function handleRoutes(req, res) {
 
   const state = {};
 
-  const string = await renderRoute(routes, req.route.path, state, res);
+  const body = await renderRoute(routes, req.route.path, state, res);
 
-  // const doc = renderDocument(manifest, string, {
-  //   pages
-  // });
+  const doc = renderDocument(manifest, body, {
+    pages
+  });
 
-  res.send(string);
+  res.send(doc);
 }
 
 exports = module.exports = function(app) {

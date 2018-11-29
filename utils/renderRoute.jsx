@@ -9,7 +9,8 @@ import Helmet, { HelmetProvider } from 'react-helmet-async';
 import generateStore from './generateStore.js';
 import rootReducer from '../theme/reducers/root';
 
-import Head from '../theme/components/Head.jsx';
+import renderDocument from './renderDocument';
+
 
 const renderRoute = function(routes, url, state, res) {
   /*
@@ -30,17 +31,14 @@ const renderRoute = function(routes, url, state, res) {
     console.log('data', data);
     const context = {};
 
-    const string = renderToString(
+    return renderToString(
       <Provider store={store}>
         <StaticRouter location={url} context={context}>          
-            {renderRoutes(routes)}
+          {renderRoutes(routes)}
         </StaticRouter>
       </Provider>
     );
-
-
-    return string;
-  })
+  });
 };
 
 export default renderRoute;
