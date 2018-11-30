@@ -47756,6 +47756,123 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps)(GlobalHeader);
 
 /***/ }),
 
+/***/ "./theme/components/pages/Arbitrary.jsx":
+/*!**********************************************!*\
+  !*** ./theme/components/pages/Arbitrary.jsx ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _reactHtmlParser = __webpack_require__(/*! react-html-parser */ "./node_modules/react-html-parser/lib/index.js");
+
+var _reactHtmlParser2 = _interopRequireDefault(_reactHtmlParser);
+
+var _reactstrap = __webpack_require__(/*! reactstrap */ "./node_modules/reactstrap/dist/reactstrap.es.js");
+
+var _GlobalHeader = __webpack_require__(/*! ../GlobalHeader.jsx */ "./theme/components/GlobalHeader.jsx");
+
+var _GlobalHeader2 = _interopRequireDefault(_GlobalHeader);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// COMPONENTS
+
+
+function mapStateToProps(state) {
+  var page = null;
+  for (var p in state.pages) {
+    if (state.pages[p].path === state.current.path) {
+      page = state.pages[p];
+    }
+  }
+
+  return {
+    pages: state.pages,
+    manifest: state.manifest,
+    page: page
+  };
+}
+
+var Arbitrary = function (_React$Component) {
+  _inherits(Arbitrary, _React$Component);
+
+  function Arbitrary(props) {
+    _classCallCheck(this, Arbitrary);
+
+    return _possibleConstructorReturn(this, (Arbitrary.__proto__ || Object.getPrototypeOf(Arbitrary)).call(this, props));
+  }
+
+  _createClass(Arbitrary, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        _reactstrap.Container,
+        null,
+        _react2.default.createElement(
+          _reactstrap.Row,
+          null,
+          _react2.default.createElement(
+            _reactstrap.Col,
+            { sm: 12 },
+            _react2.default.createElement(_GlobalHeader2.default, this.props)
+          )
+        ),
+        _react2.default.createElement('hr', null),
+        _react2.default.createElement(
+          _reactstrap.Row,
+          null,
+          _react2.default.createElement(
+            _reactstrap.Col,
+            { sm: 12 },
+            _react2.default.createElement(
+              'div',
+              { id: 'index' },
+              _react2.default.createElement(
+                'h1',
+                null,
+                this.props.page.title
+              ),
+              _react2.default.createElement(
+                'p',
+                null,
+                'this is a second layout template with some hardcoded text'
+              ),
+              (0, _reactHtmlParser2.default)(this.props.page.description)
+            )
+          )
+        )
+      );
+    }
+  }]);
+
+  return Arbitrary;
+}(_react2.default.Component);
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(Arbitrary);
+
+/***/ }),
+
 /***/ "./theme/components/pages/Index.jsx":
 /*!******************************************!*\
   !*** ./theme/components/pages/Index.jsx ***!
@@ -47879,12 +47996,16 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps)(Index);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_pages_Index_jsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/pages/Index.jsx */ "./theme/components/pages/Index.jsx");
 /* harmony import */ var _components_pages_Index_jsx__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_components_pages_Index_jsx__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_pages_Arbitrary_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/pages/Arbitrary.jsx */ "./theme/components/pages/Arbitrary.jsx");
+/* harmony import */ var _components_pages_Arbitrary_jsx__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_components_pages_Arbitrary_jsx__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 const calcite = {
   name: 'Calcite',
   pageTypes: {
-    Index: (_components_pages_Index_jsx__WEBPACK_IMPORTED_MODULE_0___default())
+    Index: (_components_pages_Index_jsx__WEBPACK_IMPORTED_MODULE_0___default()),
+    Arbitrary: (_components_pages_Arbitrary_jsx__WEBPACK_IMPORTED_MODULE_1___default())
   }
 };
 

@@ -18,8 +18,10 @@ async function handleRoutes(req, res) {
   const Page = keystone.list('Page');
   const pages = await Page.model.find({});
   const routes = generateRoutes(theme.pageTypes, pages);
-  console.log(req.url)
+  // console.log(req);
+
   const path = req.url;
+  console.log({path});
 
   const state = {
     manifest,
@@ -29,7 +31,7 @@ async function handleRoutes(req, res) {
     }
   };
 
-  const body = await renderRoute(routes, req.route.path, state, res);
+  const body = await renderRoute(routes, path, state, res);
   const doc = renderDocument(manifest, body, state);
 
   res.send(doc);

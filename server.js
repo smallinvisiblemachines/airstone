@@ -1,4 +1,5 @@
 const keystone = require('keystone');
+import clear from 'clear';
 
 keystone.init({
   'cookie secret': 'bl#rg!',
@@ -12,3 +13,4 @@ keystone.import('models');
 keystone.set('routes', require('./routes'));
 
 keystone.start();
+clear();

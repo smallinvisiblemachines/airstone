@@ -26,7 +26,6 @@ const renderRoute = function(routes, url, state, res) {
   });
 
   return Promise.all(promises).then(function(data) {
-    console.log('data', data);
     const context = {};
 
     return renderToString(
