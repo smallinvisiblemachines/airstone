@@ -20,10 +20,20 @@ function mapStateToProps(state) {
     }
   }
 
+   // get active theme
+  let theme = null;
+  for (let t in state.themes) {
+    if (state.themes[t].isActive === true) {
+      theme = state.themes[t];
+      break;
+    }
+  }
+
   return {
     pages: state.pages,
     manifest: state.manifest,
-    page
+    page,
+    theme
   };
 }
 
@@ -42,6 +52,7 @@ class Arbitrary extends React.Component {
         <hr/>
         <Row>
           <Col sm={12}>
+
             <div id="index">
               <h1>{this.props.page.title}</h1>
               <p>{'this is a second layout template with some hardcoded text'}</p>

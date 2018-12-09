@@ -1,12 +1,21 @@
 const keystone = require('keystone');
 const importRoutes = keystone.importer(__dirname);
+
+// IMPORTS
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+
+// UTILS
 import renderRoute from '../utils/renderRoute.jsx';
-import generateRoutes from '../utils/generateRoutes';
-import theme from '../theme/index';
-
 import renderDocument from '../utils/renderDocument';
+import generateRoutes from '../utils/generateRoutes';
 
+// THEME
+import theme from '../theme/index';
 import manifest from '../manifest.json';
+
+// COMPONENTS
+import App from '../theme/components/App.jsx';
 
 // const routes = {
 //   views: importRoutes('./views'),
@@ -14,18 +23,24 @@ import manifest from '../manifest.json';
 // };
 
 
+
 async function handleRoutes(req, res) {
   const Page = keystone.list('Page');
   const pages = await Page.model.find({});
+
+  const Theme = keystone.list('Theme');
+  const themes = await Theme.model.find({});
+
   const routes = generateRoutes(theme.pageTypes, pages);
   // console.log(req);
 
   const path = req.url;
-  console.log({path});
+  // console.log({path});
 
   const state = {
     manifest,
     pages,
+    themes,
     current: {
       path
     }

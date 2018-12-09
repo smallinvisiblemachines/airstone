@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 
 // THEME
 import theme from '../index';
@@ -59,11 +60,27 @@ class GlobalHeader extends Component {
   }
 
   renderNavItems(pages) {
+    /*
+      need to implement react router
+
+
+            <Link
+              to={{
+                pathname: pages[index].path,
+                // search: "?sort=name",
+                // hash: "#the-hash",
+                // state: { fromDashboard: true }
+              }}
+            >{pages[index].title}</Link>
+    */
+
     let items = [];
     for (let index in pages) {
       items.push(
         <NavItem key={index}>
-          <NavLink href={pages[index].path}>{pages[index].title}</NavLink>
+          <NavLink href={pages[index].path}>
+            {pages[index].title}
+          </NavLink>
         </NavItem>
       );
     }

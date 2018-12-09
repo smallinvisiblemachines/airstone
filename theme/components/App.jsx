@@ -2,8 +2,8 @@ import React from 'react';
 import { renderRoutes } from 'react-router-config';
 
 // COMPONENTS
-import Helmet from 'react-helmet';
-// import Head from './Head.jsx';
+import Helmet, { HelmetProvider } from 'react-helmet-async';
+import Head from './Head.jsx';
 
 /*
   the app is a global container; the first component in the chain our app renders.

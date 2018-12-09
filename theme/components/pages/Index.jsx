@@ -9,6 +9,7 @@ import {
   Row
 } from 'reactstrap';
 
+import Head from '../Head.jsx';
 import GlobalHeader from '../GlobalHeader.jsx';
 
 
@@ -20,10 +21,20 @@ function mapStateToProps(state) {
     }
   }
 
+  // get active theme
+  let theme = null;
+  for (let t in state.themes) {
+    if (state.themes[t].isActive === true) {
+      theme = state.themes[t];
+      break;
+    }
+  }
+
   return {
     pages: state.pages,
     manifest: state.manifest,
-    page
+    page,
+    theme
   };
 }
 
@@ -33,24 +44,24 @@ class Index extends React.Component {
   }
   render() {
     return(
-      <Container>
-        <Row>
-          <Col sm={12}>
-            <GlobalHeader {...this.props}/>
-          </Col>
-        </Row>
-        <hr/>
-        <Row>
-          <Col sm={12}>
+        <Container>
+          <Row>
+            <Col sm={12}>
+              <GlobalHeader {...this.props}/>
+            </Col>
+          </Row>
+          <hr/>
+          <Row>
+            <Col sm={12}>
 
-            <div id="index">
-              <h1>{this.props.page.title}</h1>
-              { ReactHtmlParser(this.props.page.description) }
-            </div>
+              <div id="index">
+                <h1>{this.props.page.title}</h1>
+                { ReactHtmlParser(this.props.page.description) }
+              </div>
 
-          </Col>
-        </Row>
-      </Container>
+            </Col>
+          </Row>
+        </Container>
     )
   }
 }
