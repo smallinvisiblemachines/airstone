@@ -53806,7 +53806,7 @@ var GlobalHeader = function (_Component) {
       isOpen: false
     };
 
-    console.log(_this);
+    // console.log(this);
     return _this;
   }
 
@@ -53921,6 +53921,10 @@ var _reactHelmetAsync = __webpack_require__(/*! react-helmet-async */ "./node_mo
 
 var _reactHelmetAsync2 = _interopRequireDefault(_reactHelmetAsync);
 
+var _App = __webpack_require__(/*! ./App.jsx */ "./theme/components/App.jsx");
+
+var _App2 = _interopRequireDefault(_App);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -53937,7 +53941,7 @@ var Head = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (Head.__proto__ || Object.getPrototypeOf(Head)).call(this, props));
 
-    console.log(_this);
+    console.log('Head!', _this.props);
     return _this;
   }
 
@@ -53955,7 +53959,8 @@ var Head = function (_Component) {
             null,
             'Test Helmet'
           )
-        )
+        ),
+        _react2.default.createElement(_App2.default, { route: this.props.route })
       );
     }
   }]);
@@ -54447,6 +54452,9 @@ function themes(
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _theme_components_App_jsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../theme/components/App.jsx */ "./theme/components/App.jsx");
 /* harmony import */ var _theme_components_App_jsx__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_theme_components_App_jsx__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _theme_components_Head_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../theme/components/Head.jsx */ "./theme/components/Head.jsx");
+/* harmony import */ var _theme_components_Head_jsx__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_theme_components_Head_jsx__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 /*
@@ -54487,7 +54495,7 @@ const generateRoutes = function(types, pages) {
   // our app is like a nested object,
   // always starting with a topmost component.
   const tree = {
-    component: _theme_components_App_jsx__WEBPACK_IMPORTED_MODULE_0___default.a,
+    component: _theme_components_Head_jsx__WEBPACK_IMPORTED_MODULE_1___default.a,
     routes: []
   };
 
