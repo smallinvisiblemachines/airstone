@@ -13,7 +13,7 @@ class Head extends Component {
     return (
       <HelmetProvider>
         <Helmet>
-          <title>Test Helmet</title>
+          <title>{this.props.title}</title>
         </Helmet>
       </HelmetProvider>
     );

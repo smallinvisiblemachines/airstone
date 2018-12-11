@@ -172,6 +172,17 @@ var Client = function Client() {
 
 /***/ }),
 
+/***/ "./manifest.json":
+/*!***********************!*\
+  !*** ./manifest.json ***!
+  \***********************/
+/*! exports provided: lang, title, charset, viewport, extStylesheets, default */
+/***/ (function(module) {
+
+module.exports = {"lang":"en","title":"airstone prototype v1","charset":"utf-8","viewport":"width=device-width, initial-scale=1, shrink-to-fit=no","extStylesheets":"global.css"};
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js":
 /*!**************************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js ***!
@@ -53692,6 +53703,10 @@ var _Head = __webpack_require__(/*! ./Head.jsx */ "./theme/components/Head.jsx")
 
 var _Head2 = _interopRequireDefault(_Head);
 
+var _manifest = __webpack_require__(/*! ../../manifest.json */ "./manifest.json");
+
+var _manifest2 = _interopRequireDefault(_manifest);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -53701,6 +53716,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 // COMPONENTS
+
+
+// CONFIG
 
 
 /*
@@ -53731,6 +53749,7 @@ var App = function (_React$Component) {
       return _react2.default.createElement(
         _react2.default.Fragment,
         null,
+        _react2.default.createElement(_Head2.default, _manifest2.default),
         (0, _reactRouterConfig.renderRoutes)(this.props.route.routes)
       );
     }
@@ -53953,7 +53972,7 @@ var Head = function (_Component) {
           _react2.default.createElement(
             'title',
             null,
-            'Test Helmet'
+            this.props.title
           )
         )
       );

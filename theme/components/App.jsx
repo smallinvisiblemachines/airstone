@@ -5,6 +5,8 @@ import { renderRoutes } from 'react-router-config';
 import Helmet, { HelmetProvider } from 'react-helmet-async';
 import Head from './Head.jsx';
 
+// CONFIG
+import manifest from '../../manifest.json';
 /*
   the app is a global container; the first component in the chain our app renders.
   thus, any layout here will appear everywhere.
@@ -21,6 +23,7 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <Head { ...manifest } />
         { renderRoutes( this.props.route.routes ) }
       </React.Fragment>
     );

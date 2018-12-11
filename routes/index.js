@@ -16,6 +16,7 @@ import manifest from '../manifest.json';
 
 // COMPONENTS
 import App from '../theme/components/App.jsx';
+import Head from '../theme/components/Head.jsx';
 
 // const routes = {
 //   views: importRoutes('./views'),
@@ -47,7 +48,7 @@ async function handleRoutes(req, res) {
   };
 
   const body = await renderRoute(routes, path, state, res);
-  const doc = renderDocument(manifest, body, state);
+  const doc = renderDocument(<Head { ...manifest }/>, body, state);
 
   res.send(doc);
 }
