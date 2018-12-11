@@ -50,7 +50,7 @@ async function handleRoutes(req, res) {
   const body = await renderRoute(routes, path, state, res);
   const doc = renderDocument(<Head { ...manifest }/>, body, state);
 
-  res.send(body);
+  res.send(doc);
 }
 
 exports = module.exports = function(app) {

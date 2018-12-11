@@ -39,7 +39,7 @@ const generateRoutes = function(types, pages) {
   // our app is like a nested object,
   // always starting with a topmost component.
   const tree = {
-    component: Head,
+    component: App,
     routes: []
   };
 
