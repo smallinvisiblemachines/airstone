@@ -38,7 +38,7 @@ class GlobalHeader extends Component {
       isOpen: false
     };
 
-    console.log(this);
+    // console.log(this);
   }
 
   /*

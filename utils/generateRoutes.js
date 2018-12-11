@@ -1,4 +1,5 @@
 import App from '../theme/components/App.jsx';
+import Head from '../theme/components/Head.jsx';
 
 /*
 generate a structure like the object below. 
@@ -38,7 +39,7 @@ const generateRoutes = function(types, pages) {
   // our app is like a nested object,
   // always starting with a topmost component.
   const tree = {
-    component: App,
+    component: Head,
     routes: []
   };
 

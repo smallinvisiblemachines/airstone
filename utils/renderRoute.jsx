@@ -7,7 +7,8 @@ import { matchRoutes, renderRoutes } from 'react-router-config';
 import generateStore from './generateStore.js';
 import rootReducer from '../theme/reducers/root';
 
-import renderDocument from './renderDocument';
+import Head from '../theme/components/Head.jsx';
+import Helmet from 'react-helmet';
 
 
 const renderRoute = function(routes, url, state, res) {
@@ -28,13 +29,15 @@ const renderRoute = function(routes, url, state, res) {
   return Promise.all(promises).then(function(data) {
     const context = {};
 
-    return renderToString(
+    const html = renderToString(
       <Provider store={store}>
-        <StaticRouter location={url} context={context}>          
-          {renderRoutes(routes)}
+        <StaticRouter location={url} context={context}>
+            {renderRoutes(routes)}
         </StaticRouter>
       </Provider>
     );
+
+    return html;
   });
 };
 
