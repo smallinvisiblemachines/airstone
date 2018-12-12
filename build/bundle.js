@@ -53735,25 +53735,28 @@ function mapStateToProps(state) {
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
 
-  function App() {
+  function App(props) {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+    console.log('App mounted:', _this.props.current.theme);
+    return _this;
   }
 
   _createClass(App, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      console.log('App mounted:', this);
-    }
-  }, {
     key: 'render',
     value: function render() {
+      var primaryFont = '';
+      if (this.props.current.theme.primaryFont) {
+        primaryFont = '@import url(\'https://fonts.googleapis.com/css?family=' + this.props.current.theme.primaryFont.replace(' ', '+') + '\');';
+      }
+
       return _react2.default.createElement(
         _react2.default.Fragment,
         null,
         _react2.default.createElement(_Head2.default, _manifest2.default),
-        _react2.default.createElement('style', { dangerouslySetInnerHTML: { __html: '\n          body { background: ' + this.props.current.theme.primaryColor + ' }\n          p, span, h1, h2, h3, h4, h5, h6 { color: ' + this.props.current.theme.secondaryColor + ' }\n        ' } }),
+        _react2.default.createElement('style', { dangerouslySetInnerHTML: { __html: '\n          ' + primaryFont + '\n          body { \n            background: ' + this.props.current.theme.primaryColor + '; \n          }\n          p, span, h1, h2, h3, h4, h5, h6 { \n            color: ' + this.props.current.theme.secondaryColor + ';\n            font-family: "' + this.props.current.theme.primaryFont + '", Helvetica, Arial, sans-serif;\n          }\n        ' } }),
         (0, _reactRouterConfig.renderRoutes)(this.props.route.routes)
       );
     }

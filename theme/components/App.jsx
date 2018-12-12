@@ -18,17 +18,29 @@ function mapStateToProps(state) {
 };
 
 class App extends React.Component {
-  componentDidMount() {
-    console.log('App mounted:', this);
+  constructor(props) {
+    super(props);
+    console.log('App mounted:', this.props.current.theme);
   }
   
   render() {
+    let primaryFont = '';
+    if (this.props.current.theme.primaryFont) {
+      primaryFont = `@import url('https://fonts.googleapis.com/css?family=${this.props.current.theme.primaryFont.replace(' ', '+')}');`;
+    }
+
     return (
       <React.Fragment>
         <Head { ...manifest } />
         <style dangerouslySetInnerHTML={{__html: `
-          body { background: ${this.props.current.theme.primaryColor} }
-          p, span, h1, h2, h3, h4, h5, h6 { color: ${this.props.current.theme.secondaryColor} }
+          ${ primaryFont }
+          body { 
+            background: ${this.props.current.theme.primaryColor}; 
+          }
+          p, span, h1, h2, h3, h4, h5, h6 { 
+            color: ${this.props.current.theme.secondaryColor};
+            font-family: "${this.props.current.theme.primaryFont}", Helvetica, Arial, sans-serif;
+          }
         `}} />
         { renderRoutes( this.props.route.routes ) }
       </React.Fragment>
