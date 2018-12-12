@@ -5,11 +5,11 @@ import Helmet, { HelmetProvider } from 'react-helmet-async';
 class Head extends Component {
   constructor(props) {
     super(props);
-
-    console.log(this);
   }
 
   render() {
+    // const charset = this.props.charset ? <meta charset={this.props.charset} /> : null;
+
     return (
       <HelmetProvider>
         <Helmet>

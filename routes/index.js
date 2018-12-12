@@ -11,19 +11,12 @@ import renderDocument from '../utils/renderDocument';
 import generateRoutes from '../utils/generateRoutes';
 
 // THEME
-import theme from '../theme/index';
+import theme from '../theme/index.js';
 import manifest from '../manifest.json';
 
 // COMPONENTS
 import App from '../theme/components/App.jsx';
 import Head from '../theme/components/Head.jsx';
-
-// const routes = {
-//   views: importRoutes('./views'),
-//   api: importRoutes('./api')
-// };
-
-
 
 async function handleRoutes(req, res) {
   const Page = keystone.list('Page');
@@ -32,23 +25,25 @@ async function handleRoutes(req, res) {
   const Theme = keystone.list('Theme');
   const themes = await Theme.model.find({});
 
+  const currentTheme = await Theme.model.findOne({
+    isActive: true
+  });
+  console.log(theme)
   const routes = generateRoutes(theme.pageTypes, pages);
-  // console.log(req);
-
   const path = req.url;
-  // console.log({path});
 
   const state = {
     manifest,
     pages,
     themes,
     current: {
-      path
+      path,
+      theme: currentTheme
     }
   };
 
   const body = await renderRoute(routes, path, state, res);
-  const doc = renderDocument(<Head { ...manifest }/>, body, state);
+  const doc = renderDocument(<Head { ...manifest } theme={state.current.theme}/>, body, state);
 
   res.send(doc);
 }

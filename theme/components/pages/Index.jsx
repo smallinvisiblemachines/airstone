@@ -21,20 +21,10 @@ function mapStateToProps(state) {
     }
   }
 
-  // get active theme
-  let theme = null;
-  for (let t in state.themes) {
-    if (state.themes[t].isActive === true) {
-      theme = state.themes[t];
-      break;
-    }
-  }
-
   return {
     pages: state.pages,
     manifest: state.manifest,
     page,
-    theme
   };
 }
 

@@ -53693,6 +53693,8 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
 var _reactRouterConfig = __webpack_require__(/*! react-router-config */ "./node_modules/react-router-config/es/index.js");
 
 var _reactHelmetAsync = __webpack_require__(/*! react-helmet-async */ "./node_modules/react-helmet-async/lib/index.js");
@@ -53718,7 +53720,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // COMPONENTS
 
 
-// CONFIG
+// CONFIG / THEME
 
 
 /*
@@ -53726,8 +53728,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
   thus, any layout here will appear everywhere.
 */
 
-// THEME
-
+function mapStateToProps(state) {
+  return state;
+};
 
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
@@ -53750,6 +53753,7 @@ var App = function (_React$Component) {
         _react2.default.Fragment,
         null,
         _react2.default.createElement(_Head2.default, _manifest2.default),
+        _react2.default.createElement('style', { dangerouslySetInnerHTML: { __html: '\n          body { background: ' + this.props.current.theme.primaryColor + ' }\n          p, span, h1, h2, h3, h4, h5, h6 { color: ' + this.props.current.theme.secondaryColor + ' }\n        ' } }),
         (0, _reactRouterConfig.renderRoutes)(this.props.route.routes)
       );
     }
@@ -53758,7 +53762,7 @@ var App = function (_React$Component) {
   return App;
 }(_react2.default.Component);
 
-exports.default = App;
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(App);
 
 /***/ }),
 
@@ -53954,15 +53958,14 @@ var Head = function (_Component) {
   function Head(props) {
     _classCallCheck(this, Head);
 
-    var _this = _possibleConstructorReturn(this, (Head.__proto__ || Object.getPrototypeOf(Head)).call(this, props));
-
-    console.log(_this);
-    return _this;
+    return _possibleConstructorReturn(this, (Head.__proto__ || Object.getPrototypeOf(Head)).call(this, props));
   }
 
   _createClass(Head, [{
     key: 'render',
     value: function render() {
+      // const charset = this.props.charset ? <meta charset={this.props.charset} /> : null;
+
       return _react2.default.createElement(
         _reactHelmetAsync.HelmetProvider,
         null,
@@ -54168,20 +54171,10 @@ function mapStateToProps(state) {
     }
   }
 
-  // get active theme
-  var theme = null;
-  for (var t in state.themes) {
-    if (state.themes[t].isActive === true) {
-      theme = state.themes[t];
-      break;
-    }
-  }
-
   return {
     pages: state.pages,
     manifest: state.manifest,
-    page: page,
-    theme: theme
+    page: page
   };
 }
 

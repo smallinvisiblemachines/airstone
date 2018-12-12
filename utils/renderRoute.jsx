@@ -32,7 +32,7 @@ const renderRoute = function(routes, url, state, res) {
     const html = renderToString(
       <Provider store={store}>
         <StaticRouter location={url} context={context}>
-            {renderRoutes(routes)}
+          {renderRoutes(routes)}
         </StaticRouter>
       </Provider>
     );
